@@ -1,7 +1,7 @@
 <Project Sdk="Dalamud.NET.Sdk/15.0.0">
   <PropertyGroup>
     <Authors>MintakaSeiran</Authors>
-    <Version>1.0.009</Version>
+    <Version>1.0.010</Version>
     <Description>Shows compact nameplates for FFXIV A/S rank hunt marks.</Description>
     <PackageProjectUrl>https://github.com/</PackageProjectUrl>
   </PropertyGroup>

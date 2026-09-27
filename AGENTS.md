@@ -11,3 +11,4 @@ These rules apply to the AsMobPlate plugin, not unrelated projects in this works
 - Let the SDK derive assembly and manifest versions. Numeric .NET/Dalamud versions may normalize `1.0.005` to `1.0.5.0`.
 - Keep `Configuration.Version` independent: it is a configuration schema migration number.
 - Run `dotnet build` after a change and verify the generated manifest version matches the DLL before delivery.
+- Keep README.md headings, descriptions, and captions in English, and prefer English UI screenshots for the GitHub page. Preserve the plugin's multilingual UI support.
