@@ -15,6 +15,7 @@ public sealed class ConfigWindow
     private static readonly string ReleaseVersion = $"{AssemblyVersion.Major}.{AssemblyVersion.Minor}.{AssemblyVersion.Build:000}";
     private readonly Configuration configuration;
     private readonly DebugLog debugLog;
+    private readonly NameplatePreview preview;
     private string logSaveStatus = string.Empty;
 
     public bool IsOpen;
@@ -23,6 +24,7 @@ public sealed class ConfigWindow
     {
         this.configuration = configuration;
         this.debugLog = debugLog;
+        this.preview = new NameplatePreview(configuration);
     }
 
     public void Draw()
@@ -53,6 +55,7 @@ public sealed class ConfigWindow
             }
 
             ImGui.Separator();
+            this.preview.Draw();
             if (ImGui.BeginTabBar("settings-tabs", ImGuiTabBarFlags.FittingPolicyScroll))
             {
                 for (var i = 0; i < Tabs.Length; i++)

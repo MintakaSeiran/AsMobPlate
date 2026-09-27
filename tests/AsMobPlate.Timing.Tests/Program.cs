@@ -1,5 +1,6 @@
 using AsMobPlate.Overlay;
 using AsMobPlate.Localization;
+using AsMobPlate.Windows;
 
 var passed = 0;
 var failed = 0;
@@ -207,6 +208,23 @@ Run("Invalid saved languages fall back to English", () =>
 {
     Equal(UiText.Get("Display", UiLanguage.EN), UiText.Get("Display", (UiLanguage)99));
     Equal("unknown", UiText.Get("unknown", UiLanguage.JP));
+});
+
+Run("Preview countdown cycles through waiting, start, in-progress and restart", () =>
+{
+    Near(10, PreviewAnimation.RemainingSeconds(0, 10));
+    Near(5, PreviewAnimation.RemainingSeconds(5, 10));
+    Near(0, PreviewAnimation.RemainingSeconds(10, 10));
+    Near(-2, PreviewAnimation.RemainingSeconds(12, 10));
+    Near(10, PreviewAnimation.RemainingSeconds(13, 10));
+});
+Run("Preview honors configured countdown duration and invalid elapsed time", () =>
+{
+    Near(30, PreviewAnimation.RemainingSeconds(0, 30));
+    Near(0, PreviewAnimation.RemainingSeconds(30, 30));
+    Near(30, PreviewAnimation.RemainingSeconds(33, 30));
+    Near(5, PreviewAnimation.RemainingSeconds(double.NaN, 1));
+    Near(10, PreviewAnimation.RemainingSeconds(-1, 10));
 });
 
 Console.WriteLine($"{passed} passed, {failed} failed");

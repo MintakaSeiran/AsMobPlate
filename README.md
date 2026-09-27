@@ -4,7 +4,7 @@ Small Dalamud dev plugin for showing and tracking only FFXIV A-rank and S-rank h
 
 ## Version
 
-Current release: `1.0.008`.
+Current release: `1.0.009`.
 
 Author: MintakaSeiran.
 
@@ -177,12 +177,27 @@ After the start time passes, the plate switches to the configured in-progress ba
 
 ```powershell
 dotnet run --project tests/AsMobPlate.Timing.Tests/AsMobPlate.Timing.Tests.csproj
+dotnet run --project tests/AsMobPlate.Rendering.Tests/AsMobPlate.Rendering.Tests.csproj
 dotnet build -c Debug
 ```
+
+描画テストはWindowsとローカルのDalamud開発用ライブラリが必要です。標準の `AppData/Roaming/XIVLauncher/addon/Hooks/dev` を参照し、別の場所は `-p:DalamudLibPath=...` で指定できます。実際のImGuiで4言語・HP状態・倍率・ウィンドウサイズを変えてジオメトリ生成を検証しますが、ゲーム内フォントやGPU上の見た目の確認は含みません。
 
 API定義の確認元: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs)、[UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs)、[Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs)。ローカルに同梱されたDLLでも該当フィールド・メソッドを確認しています。
 
 ## Settings
+
+### ウィンドウ内プレビュー (1.0.009)
+
+- 設定ウィンドウの上部に折りたたみ可能なプレビューを表示します。どの設定タブでも見た目を確認でき、変更は次の描画フレームで反映されます。
+- A/Sランク、HP (0～100%)、通常・カウントダウン・討伐中を切り替えられます。ランクの非表示設定も反映します。
+- カウントダウンは残り秒数のスライダーで停止状態を確認でき、アニメーションを有効にすると設定秒数のカウントダウンと討伐中3秒を繰り返します。
+- 名前、HPバー、距離、討伐予測、開始時刻、文字色、背景色、外周の色・太さ、Scale、4言語の表示は実際の `NameplatePainter` と共通です。
+- 原寸表示を維持します。大きなプレートはプレビュー領域の縦横スクロールで確認でき、枠はウィンドウ外へ描画しません。
+- サンプル名、距離23y、ObjectIndex 118、HP低下時の討伐予測75秒は確認用データです。HP0%も外観確認のため表示しますが、実際の死亡モブは従来どおり表示しません。
+- 頭上位置 (Y Offset)、ワールド座標、実際の距離による表示・通知判定はプレビュー対象外です。
+- プレビューのランク・HP・状態は一時的なウィンドウ状態で、保存済み設定や実際のET予約・モブの状態を書き換えません。
+- 描画先はウィンドウのDrawListです。ObjectTable走査、サウンド、TTS、チャット通知、旗の設置、標準 `/countdown` 実行は行いません。
 
 Version 1.0.008 introduces a resizable tabbed settings window: Display, Alerts, Start time, Appearance, Log, and Info. The EN / JP / DE / FR selector stays above the tabs. The selected language is saved immediately; the initial language is JP. Existing settings retain their values.
 

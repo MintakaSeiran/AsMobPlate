@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DalamudLibPath Condition="'$(DalamudLibPath)' == ''">$(APPDATA)/XIVLauncher/addon/Hooks/dev</DalamudLibPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dalamud" HintPath="$(DalamudLibPath)/Dalamud.dll" />
+    <Reference Include="Dalamud.Bindings.ImGui" HintPath="$(DalamudLibPath)/Dalamud.Bindings.ImGui.dll" />
+    <Content Include="$(DalamudLibPath)/cimgui.dll" Link="cimgui.dll" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../../Configuration.cs" Link="Configuration.cs" />
+    <Compile Include="../../Hunts/HuntRank.cs" Link="HuntRank.cs" />
+    <Compile Include="../../Localization/UiText.cs" Link="UiText.cs" />
+    <Compile Include="../../Overlay/NameplatePainter.cs" Link="NameplatePainter.cs" />
+    <Compile Include="../../Overlay/DebugLog.cs" Link="DebugLog.cs" />
+    <Compile Include="../../Windows/NameplatePreview.cs" Link="NameplatePreview.cs" />
+    <Compile Include="../../Windows/PreviewAnimation.cs" Link="PreviewAnimation.cs" />
+    <Compile Include="../../Windows/ConfigWindow.cs" Link="ConfigWindow.cs" />
+  </ItemGroup>
+</Project>

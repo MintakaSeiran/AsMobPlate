@@ -17,6 +17,14 @@ public static class UiText
     // Column order is EN / JP / DE / FR. IDs remain independent of displayed translations.
     private static readonly Dictionary<string, string[]> Translations = new(StringComparer.Ordinal)
     {
+        ["Preview"] = ["Preview", "プレビュー", "Vorschau", "Aperçu"],
+        ["Preview idle"] = ["Idle", "通常", "Ruhezustand", "Au repos"],
+        ["Preview countdown"] = ["Countdown", "カウントダウン", "Countdown", "Compte à rebours"],
+        ["Preview HP"] = ["HP", "HP", "LP", "PV"],
+        ["Animate preview"] = ["Animate countdown", "カウントダウンを試す", "Countdown animieren", "Animer le compte à rebours"],
+        ["Preview remaining"] = ["Remaining seconds", "残り秒数", "Verbleibende Sekunden", "Secondes restantes"],
+        ["Preview hunt name"] = ["Sample hunt", "サンプルモブ", "Beispiel-Jagdziel", "Cible de démonstration"],
+        ["Preview rank hidden"] = ["This rank is hidden by the display settings.", "このランクは表示設定で非表示になっています。", "Dieser Rang ist in den Anzeigeeinstellungen ausgeblendet.", "Ce rang est masqué dans les paramètres d'affichage."],
         ["Display"] = ["Display", "表示", "Anzeige", "Affichage"],
         ["Notifications"] = ["Alerts", "通知", "Meldungen", "Alertes"],
         ["Timing"] = ["Start time", "開始時刻", "Startzeit", "Départ"],
