@@ -38,6 +38,12 @@ public sealed class NameplatePainter
         var hpText = $"{hpRatio * 100.0f:0}%";
         var hpTextSize = ImGui.CalcTextSize(hpText);
         var infoText = BuildInfoText(data.Distance, data.TimeToKill);
+        var tooLate = this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double arrival
+            && data.TimeToKill is TimeSpan ttk && arrival > ttk.TotalSeconds;
+        if (this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double seconds)
+            infoText += $"\n{UiText.Get("Arrival", this.configuration.Language)} {seconds:0}s";
+        if (tooLate)
+            infoText += $"\n{UiText.Get("Arrival too late", this.configuration.Language)}";
         var startText = data.StartText;
         var isInProgress = data.IsInProgress;
         var startRemainingSeconds = data.RemainingSeconds;
@@ -65,7 +71,10 @@ public sealed class NameplatePainter
         var bottomRight = topLeft + boxSize;
 
         var backgroundColor = isInProgress ? this.configuration.InProgressBackgroundColor : this.configuration.BackgroundColor;
-        drawList.AddRectFilled(topLeft, bottomRight, ToU32(backgroundColor), 4.0f * scale);
+        if (tooLate)
+            this.DrawWarningBackground(drawList, topLeft, bottomRight, scale);
+        else
+            drawList.AddRectFilled(topLeft, bottomRight, ToU32(backgroundColor), 4.0f * scale);
         this.DrawCountdownFrame(drawList, topLeft, bottomRight, startText.Length > 0, isInProgress, startRemainingSeconds, scale, data.CountdownWindowSeconds);
 
         var currentY = topLeft.Y + paddingY;
@@ -108,6 +117,22 @@ public sealed class NameplatePainter
         var startY = this.DrawInfoText(drawList, topLeft, boxSize, barBottomRight.Y + gapY, infoText, infoSize);
         this.DrawInfoText(drawList, topLeft, boxSize, startY, startText, startSize);
         return boxSize;
+    }
+
+    private void DrawWarningBackground(ImDrawListPtr list, Vector2 min, Vector2 max, float scale)
+    {
+        var width = 14 * scale;
+        var height = max.Y - min.Y;
+        // Adjacent, non-overlapping stripes preserve each color's configured alpha.
+        list.PushClipRect(min, max, true);
+        for (var i = 0; i * width < max.X - min.X + height; i++)
+        {
+            var x = min.X - height + i * width;
+            var color = i % 2 == 0 ? this.configuration.ArrivalWarningRed : this.configuration.ArrivalWarningYellow;
+            list.AddQuadFilled(new Vector2(x, min.Y), new Vector2(x + width, min.Y),
+                new Vector2(x + width + height, max.Y), new Vector2(x + height, max.Y), ToU32(color));
+        }
+        list.PopClipRect();
     }
 
     private float DrawInfoText(ImDrawListPtr drawList, Vector2 topLeft, Vector2 boxSize, float y, string infoText, Vector2 infoSize)
@@ -218,4 +243,5 @@ public readonly record struct NameplateData(
     string StartText,
     bool IsInProgress,
     double RemainingSeconds,
-    int CountdownWindowSeconds);
+    int CountdownWindowSeconds,
+    double? ArrivalSeconds = null);

@@ -24,6 +24,11 @@ public sealed class Configuration : IPluginConfiguration
     public bool ShowAnnouncedStartTime = true;
     public bool ShowEtAtAnnouncement = true;
     public bool ShowInProgressLabel = true;
+    public bool ShowArrivalWarning = true;
+    public float ArrivalDistance = 25;
+    public float ArrivalPreparationSeconds = 3;
+    public Vector4 ArrivalWarningRed = new(1, 0, 0, 0.5f);
+    public Vector4 ArrivalWarningYellow = new(1, 1, 0, 0.5f);
     public bool ShowCountdownFrame = true;
     public bool EnableCountdownOnAnnouncedStart = true;
     public bool ShowObjectIndex;

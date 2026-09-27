@@ -10,7 +10,7 @@ namespace AsMobPlate.Windows;
 // This window-only state never reaches hunt detection, notifications, or native commands.
 public sealed class NameplatePreview
 {
-    private static readonly string[] Modes = ["Preview idle", "Preview countdown", "In progress"];
+    private static readonly string[] Modes = ["Preview idle", "Preview countdown", "In progress", "Arrival too late"];
     private readonly Configuration configuration;
     private readonly NameplatePainter painter;
     private HuntRank rank = HuntRank.A;
@@ -97,8 +97,9 @@ public sealed class NameplatePreview
         }
 
         var data = new NameplateData(this.rank, this.Text("Preview hunt name"), 118, this.hpPercent / 100,
-            23, this.hpPercent < 100 ? TimeSpan.FromSeconds(75) : null,
-            startText, inProgress, this.mode == 2 ? 0 : remaining, duration);
+            this.mode == 3 ? 850 : 23, this.mode == 3 ? TimeSpan.FromSeconds(35) : this.hpPercent < 100 ? TimeSpan.FromSeconds(75) : null,
+            this.mode == 3 ? string.Empty : startText, inProgress, this.mode == 2 ? 0 : remaining, duration,
+            this.mode == 3 ? 48 : null);
         var size = this.painter.Measure(data);
         var margin = 16 + 12 * MathF.Max(0.25f, this.configuration.Scale);
         var maxCanvasHeight = Math.Clamp(ImGui.GetContentRegionAvail().Y - 120, 80, 260);

@@ -108,6 +108,9 @@ public sealed class ConfigWindow
         changed |= this.Checkbox("Show HP percent", ref this.configuration.ShowHpPercent);
         changed |= this.Checkbox("Show distance", ref this.configuration.ShowDistance);
         changed |= this.Checkbox("Show time to kill", ref this.configuration.ShowTimeToKill);
+        changed |= this.Checkbox("Show arrival warning", ref this.configuration.ShowArrivalWarning);
+        changed |= this.SliderFloat("Arrival distance", ref this.configuration.ArrivalDistance, 0, 100, this.Text("Distance unit"));
+        changed |= this.SliderFloat("Arrival preparation", ref this.configuration.ArrivalPreparationSeconds, 0, 60, this.Text("Seconds unit"));
         changed |= this.Checkbox("Show ObjectIndex", ref this.configuration.ShowObjectIndex);
         changed |= this.SliderFloat("Max display distance", ref this.configuration.MaxDistance, 20, 2000, this.Text("Distance unit"));
         changed |= this.SliderFloat("Time to kill sample window", ref this.configuration.TtkSampleWindowSeconds, 10, 180, this.Text("Seconds unit"));
@@ -160,6 +163,8 @@ public sealed class ConfigWindow
         changed |= this.ColorEdit("HP bar color", ref this.configuration.HpBarColor);
         changed |= this.ColorEdit("Background color", ref this.configuration.BackgroundColor);
         changed |= this.ColorEdit("In-progress background color", ref this.configuration.InProgressBackgroundColor);
+        changed |= this.ColorEdit("Warning red", ref this.configuration.ArrivalWarningRed);
+        changed |= this.ColorEdit("Warning yellow", ref this.configuration.ArrivalWarningYellow);
         changed |= this.ColorEdit("Countdown frame color", ref this.configuration.CountdownFrameColor);
         return changed;
     }

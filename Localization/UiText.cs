@@ -17,6 +17,13 @@ public static class UiText
     // Column order is EN / JP / DE / FR. IDs remain independent of displayed translations.
     private static readonly Dictionary<string, string[]> Translations = new(StringComparer.Ordinal)
     {
+        ["Show arrival warning"] = ["Show arrival warning", "到着予測・間に合わない警告を表示", "Ankunftswarnung anzeigen", "Afficher l'alerte d'arrivée"],
+        ["Arrival distance"] = ["Arrival distance", "到着とみなす距離", "Ankunftsdistanz", "Distance d'arrivée"],
+        ["Arrival preparation"] = ["Arrival preparation time", "到着後の準備時間", "Vorbereitungszeit", "Temps de préparation"],
+        ["Arrival"] = ["Estimated arrival", "到着予測", "Geschätzte Ankunft", "Arrivée estimée"],
+        ["Arrival too late"] = ["Likely too late", "間に合わない見込み", "Voraussichtlich zu spät", "Probablement trop tard"],
+        ["Warning red"] = ["Warning stripe red", "警告ストライプ：赤", "Warnstreifen Rot", "Bande rouge d'alerte"],
+        ["Warning yellow"] = ["Warning stripe yellow", "警告ストライプ：黄", "Warnstreifen Gelb", "Bande jaune d'alerte"],
         ["Preview"] = ["Preview", "プレビュー", "Vorschau", "Aperçu"],
         ["Preview idle"] = ["Idle", "通常", "Ruhezustand", "Au repos"],
         ["Preview countdown"] = ["Countdown", "カウントダウン", "Countdown", "Compte à rebours"],

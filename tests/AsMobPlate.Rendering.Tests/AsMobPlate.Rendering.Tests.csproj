@@ -15,6 +15,7 @@
     <Compile Include="../../Hunts/HuntRank.cs" Link="HuntRank.cs" />
     <Compile Include="../../Localization/UiText.cs" Link="UiText.cs" />
     <Compile Include="../../Overlay/NameplatePainter.cs" Link="NameplatePainter.cs" />
+    <Compile Include="../../Overlay/ArrivalEstimator.cs" Link="ArrivalEstimator.cs" />
     <Compile Include="../../Overlay/DebugLog.cs" Link="DebugLog.cs" />
     <Compile Include="../../Windows/NameplatePreview.cs" Link="NameplatePreview.cs" />
     <Compile Include="../../Windows/PreviewAnimation.cs" Link="PreviewAnimation.cs" />

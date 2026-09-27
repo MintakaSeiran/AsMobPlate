@@ -1,5 +1,7 @@
 using System;
 using System.Numerics;
+using System.Diagnostics;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
@@ -19,6 +21,7 @@ public sealed class HuntNameplateRenderer : IDisposable
     private readonly HuntMapFlagger mapFlagger;
     private readonly AnnouncedStartTimeTracker announcedStartTimeTracker;
     private readonly HpTracker hpTracker = new();
+    private readonly ArrivalEstimator arrivalEstimator = new();
 
     public DebugLog DebugLog { get; } = new();
 
@@ -53,7 +56,11 @@ public sealed class HuntNameplateRenderer : IDisposable
         {
             var localPlayer = this.objectTable.LocalPlayer;
             if (localPlayer == null)
+            {
+                this.arrivalEstimator.Reset();
                 return;
+            }
+            this.arrivalEstimator.Update(localPlayer.Position, (double)Stopwatch.GetTimestamp() / Stopwatch.Frequency);
 
             var maxDisplayDistanceSq = this.configuration.MaxDistance * this.configuration.MaxDistance;
             var aNotificationDistanceSq = this.configuration.ARankNotificationDistance * this.configuration.ARankNotificationDistance;
@@ -86,7 +93,12 @@ public sealed class HuntNameplateRenderer : IDisposable
                 var timeToKill = this.hpTracker.Update(npc, this.configuration.TtkSampleWindowSeconds);
 
                 if (distanceSq <= maxDisplayDistanceSq)
-                    this.DrawNameplate(npc, rank, distance, timeToKill);
+                {
+                    var arrival = (npc.StatusFlags & StatusFlags.InCombat) != 0
+                        ? this.arrivalEstimator.Estimate(localPlayer.Position, npc.Position, this.configuration.ArrivalDistance, this.configuration.ArrivalPreparationSeconds)
+                        : null;
+                    this.DrawNameplate(npc, rank, distance, timeToKill, arrival);
+                }
             }
         }
         catch (Exception ex)
@@ -107,7 +119,7 @@ public sealed class HuntNameplateRenderer : IDisposable
         this.notifier.Dispose();
     }
 
-    private void DrawNameplate(IBattleNpc npc, HuntRank rank, float distance, TimeSpan? timeToKill)
+    private void DrawNameplate(IBattleNpc npc, HuntRank rank, float distance, TimeSpan? timeToKill, double? arrival)
     {
         var worldPosition = npc.Position + new Vector3(0.0f, MathF.Max(2.0f, npc.HitboxRadius * 1.5f) + this.configuration.YOffset, 0.0f);
         if (!this.gameGui.WorldToScreen(worldPosition, out var screenPosition))
@@ -116,7 +128,7 @@ public sealed class HuntNameplateRenderer : IDisposable
         var hasStart = this.announcedStartTimeTracker.TryGetDisplayText(out var startText, out var inProgress, out var remaining);
         var data = new NameplateData(rank, npc.Name.ToString(), npc.ObjectIndex,
             (float)npc.CurrentHp / npc.MaxHp, distance, timeToKill,
-            hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds);
+            hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival);
         this.painter.Draw(ImGui.GetForegroundDrawList(), screenPosition, data);
     }
 }
