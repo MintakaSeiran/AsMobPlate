@@ -1,0 +1,14 @@
+# .NET build output and local deployment backups
+**/[Bb]in/
+**/[Oo]bj/
+/output/
+
+# Local IDE state and diagnostic logs
+.vs/
+*.user
+*.suo
+*.log
+debug-log.txt
+
+# Separate local project
+/HealerFollower/

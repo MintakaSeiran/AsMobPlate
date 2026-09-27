@@ -1,0 +1,13 @@
+{
+  "Author": "Codex",
+  "Name": "AS Mob Plate",
+  "Punchline": "Compact nameplates for A/S rank hunt marks.",
+  "Description": "Displays simple overhead nameplates only for A and S rank hunt marks, using BNpcName/NameId based detection.",
+  "InternalName": "AsMobPlate",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "hunt",
+    "overlay",
+    "nameplate"
+  ]
+}

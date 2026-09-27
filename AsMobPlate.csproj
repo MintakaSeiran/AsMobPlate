@@ -1,0 +1,13 @@
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+  <PropertyGroup>
+    <Authors>Codex</Authors>
+    <Version>1.0.006</Version>
+    <Description>Shows compact nameplates for FFXIV A/S rank hunt marks.</Description>
+    <PackageProjectUrl>https://github.com/</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+    <PackageReference Include="System.Speech" Version="9.0.3" />
+  </ItemGroup>
+</Project>
