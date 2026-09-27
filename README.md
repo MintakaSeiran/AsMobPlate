@@ -6,7 +6,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview. Screenshot captured in version 1.0.009; values shown are customized settings, not defaults.*
 
-**Current release:** `1.0.010` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.011` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Features
 
@@ -136,6 +136,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.010` to `1.0.10.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.011` to `1.0.11.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

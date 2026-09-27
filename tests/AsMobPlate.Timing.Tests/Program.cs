@@ -178,6 +178,22 @@ Run("Display formatting does not apply a local time zone or clock offset", () =>
     Equal("13:13:59", EorzeaStartSchedule.FormatTime(At(13, 13, 59), true));
     Equal("00:00:00", EorzeaStartSchedule.FormatTime(At(0, 0), true));
 });
+Run("Announcement parser accepts full-width ET times with trailing text", () =>
+{
+    Equal(true, AnnouncementTextParser.TryParseAnnouncement("ET１０：４０で開始します", out var hour, out var minute));
+    Equal(10, hour);
+    Equal(40, minute);
+});
+Run("Announcement parser accepts full-width ET marker and compact time", () =>
+{
+    Equal(true, AnnouncementTextParser.TryParseAnnouncement("ＥＴ１０４０で", out var hour, out var minute));
+    Equal(10, hour);
+    Equal(40, minute);
+});
+Run("Announcement parser still rejects plain unmarked numbers", () =>
+{
+    Equal(false, AnnouncementTextParser.TryParseAnnouncement("１０：４０で", out _, out _));
+});
 
 Run("Every UI key has a translation in all four languages", () =>
 {

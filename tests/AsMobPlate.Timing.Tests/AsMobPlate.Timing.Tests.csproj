@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../Overlay/EorzeaStartSchedule.cs" Link="EorzeaStartSchedule.cs" />
+    <Compile Include="../../Overlay/AnnouncementTextParser.cs" Link="AnnouncementTextParser.cs" />
     <Compile Include="../../Localization/UiText.cs" Link="UiText.cs" />
     <Compile Include="../../Windows/PreviewAnimation.cs" Link="PreviewAnimation.cs" />
   </ItemGroup>

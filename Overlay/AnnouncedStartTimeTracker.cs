@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 using Dalamud.Game.Chat;
 using Dalamud.Plugin.Services;
 using AsMobPlate.Localization;
@@ -13,11 +12,6 @@ namespace AsMobPlate.Overlay;
 // Timing specification and in-game verification steps: README.md, "Announced Start Time".
 public sealed class AnnouncedStartTimeTracker : IDisposable
 {
-    private static readonly Regex ColonTimeRegex = new(@"(?i)(?:\bET\s*)?([01]?\d|2[0-3])\s*[:：]\s*([0-5]\d)", RegexOptions.Compiled);
-    private static readonly Regex CompactEtTimeRegex = new(@"(?i)\bET\s*([01]?\d|2[0-3])([0-5]\d)\b", RegexOptions.Compiled);
-    private static readonly Regex SpecialEtTimeRegex = new(@"\uE0D2\s*([01]?\d|2[0-3])([0-5]\d)\b", RegexOptions.Compiled);
-    private static readonly string[] Keywords = { "開始", "スタート", "start", "pull", "et" };
-
     private readonly Configuration configuration;
     private readonly IChatGui chatGui;
     private readonly IFramework framework;
@@ -80,7 +74,7 @@ public sealed class AnnouncedStartTimeTracker : IDisposable
     private void OnChatMessage(IChatMessage message)
     {
         var text = message.Message.ToString();
-        if (!TryParseTime(text, out var hour, out var minute) || !ContainsKeyword(text))
+        if (!AnnouncementTextParser.TryParseAnnouncement(text, out var hour, out var minute))
             return;
 
         // Copy chat data before scheduling: the callback's message is only valid during this event.
@@ -244,37 +238,6 @@ public sealed class AnnouncedStartTimeTracker : IDisposable
         this.startEtText = string.Empty;
         this.announcedAtEtText = string.Empty;
         this.startLogged = false;
-    }
-
-    private static bool TryParseTime(string text, out int hour, out int minute)
-    {
-        var match = ColonTimeRegex.Match(text);
-        if (!match.Success)
-            match = CompactEtTimeRegex.Match(text);
-        if (!match.Success)
-            match = SpecialEtTimeRegex.Match(text);
-
-        if (!match.Success)
-        {
-            hour = 0;
-            minute = 0;
-            return false;
-        }
-
-        hour = int.Parse(match.Groups[1].Value);
-        minute = int.Parse(match.Groups[2].Value);
-        return true;
-    }
-
-    private static bool ContainsKeyword(string text)
-    {
-        for (var i = 0; i < Keywords.Length; i++)
-        {
-            if (text.Contains(Keywords[i], StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
-
-        return text.Contains('\uE0D2');
     }
 
     private static string SanitizeForLog(string text)
