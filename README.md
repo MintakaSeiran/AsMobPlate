@@ -122,15 +122,9 @@ The chat tracker recognizes announcements such as `ET 22:30`, `ET830`, `ET 830`,
 
 ### Chat Detection Example
 
-![Illustrated chat announcement containing ET115 followed by English start text](docs/images/et-chat-announcement.png)
+An announcement such as `ET115 start` is interpreted as **ET 01:15**. Japanese text immediately after the time is also supported.
 
-The example announcement above contains `ET115`, which is interpreted as **ET 01:15**. Japanese text immediately after the time is also supported.
-
-![S-rank nameplate showing receipt ET 00:47, target ET 1:15, and 33 real seconds remaining](docs/images/et-announcement-nameplate.png)
-
-The illustrated plate shows the ET captured when the announcement was accepted (`00:47`), the announced start (`01:15`), and the remaining real seconds (`33` in this example). The receipt ET stays fixed while the remaining time updates. Consequently, subtracting the two displayed ET values gives the original wait, not the current remaining wait. One ET minute equals approximately 2.917 real seconds.
-
-*The announcement is an illustrative text panel, not the game's chat UI. The nameplate uses the plugin's actual renderer with a fictional hunt name.*
+For example, a plate displaying `ET 00:47 -> 01:15 in 33s` shows the ET captured when the announcement was accepted (`00:47`), the announced start (`01:15`), and the remaining real seconds (`33`). The receipt ET stays fixed while the remaining time updates. Consequently, subtracting the two displayed ET values gives the original wait, not the current remaining wait. One ET minute equals approximately 2.917 real seconds.
 
 ### Supported Text Variations
 
