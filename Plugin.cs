@@ -47,7 +47,7 @@ public sealed class Plugin : IDalamudPlugin
         this.renderer = new HuntNameplateRenderer(this.configuration, registry, objectTable, gameGui, clientState, chatGui, framework, pluginLog);
         this.configWindow = new ConfigWindow(this.configuration, this.renderer.DebugLog);
 
-        foreach (var name in new[] { CommandName, "/amp" })
+        foreach (var name in new[] { CommandName, "/amp", "/asmob", "/asm" })
         {
             if (this.commandManager.AddHandler(name, new CommandInfo(this.OnCommand)
                 { HelpMessage = "AS Mob Plate settings. Use /amp help for commands." }))
@@ -171,7 +171,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void PrintHelp()
     {
-        this.Reply("/amp = /asmobplate | config, open, close, preview, status, help");
+        this.Reply("/amp = /asmobplate = /asmob = /asm | config, open, close, preview, status, help");
         this.Reply("/amp <a|s|sound|tts|hp|percent|flag|countdown> <on|off|toggle>");
         this.Reply("/amp distance <1-2000> | lang <en|jp|de|fr> | log <dump|clear>");
     }
