@@ -72,7 +72,14 @@ public sealed class NameplatePainter
 
         var backgroundColor = isInProgress ? this.configuration.InProgressBackgroundColor : this.configuration.BackgroundColor;
         if (tooLate)
-            this.DrawWarningBackground(drawList, topLeft, bottomRight, scale);
+        {
+            // A slow, continuous pulse keeps the text readable without abrupt flashes.
+            var pulse = (float)(0.5 - 0.5 * Math.Cos(ImGui.GetTime() * Math.PI));
+            var animatedBackground = Vector4.Lerp(new Vector4(0.01f, 0.01f, 0.01f, 0.88f),
+                new Vector4(0.42f, 0.01f, 0.01f, 0.88f), pulse);
+            drawList.AddRectFilled(topLeft, bottomRight, ToU32(animatedBackground), 4.0f * scale);
+            this.DrawWarningFrame(drawList, topLeft, bottomRight, scale);
+        }
         else
             drawList.AddRectFilled(topLeft, bottomRight, ToU32(backgroundColor), 4.0f * scale);
         this.DrawCountdownFrame(drawList, topLeft, bottomRight, startText.Length > 0, isInProgress, startRemainingSeconds, scale, data.CountdownWindowSeconds);
@@ -119,12 +126,24 @@ public sealed class NameplatePainter
         return boxSize;
     }
 
-    private void DrawWarningBackground(ImDrawListPtr list, Vector2 min, Vector2 max, float scale)
+    private void DrawWarningFrame(ImDrawListPtr list, Vector2 min, Vector2 max, float scale)
+    {
+        var thickness = 4 * scale;
+        var outerMin = min - new Vector2(thickness);
+        var outerMax = max + new Vector2(thickness);
+        // Four non-overlapping clip regions leave the entire content area stripe-free.
+        this.DrawWarningStripes(list, outerMin, outerMax, outerMin, new Vector2(outerMax.X, min.Y), scale);
+        this.DrawWarningStripes(list, outerMin, outerMax, new Vector2(outerMin.X, max.Y), outerMax, scale);
+        this.DrawWarningStripes(list, outerMin, outerMax, new Vector2(outerMin.X, min.Y), new Vector2(min.X, max.Y), scale);
+        this.DrawWarningStripes(list, outerMin, outerMax, new Vector2(max.X, min.Y), new Vector2(outerMax.X, max.Y), scale);
+    }
+
+    private void DrawWarningStripes(ImDrawListPtr list, Vector2 min, Vector2 max, Vector2 clipMin, Vector2 clipMax, float scale)
     {
         var width = 14 * scale;
         var height = max.Y - min.Y;
         // Adjacent, non-overlapping stripes preserve each color's configured alpha.
-        list.PushClipRect(min, max, true);
+        list.PushClipRect(clipMin, clipMax, true);
         for (var i = 0; i * width < max.X - min.X + height; i++)
         {
             var x = min.X - height + i * width;
