@@ -4,7 +4,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
-*English settings and live preview rendered from the implemented plugin UI on a plain background. All illustrations use sample data, with no game screenshots, characters, environments, or game UI assets.*
+*English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
 **Current release:** `1.0.016` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
@@ -209,7 +209,7 @@ Timing tests cover clock conversion, midnight rollover, duplicate announcements,
 
 The rendering harness defaults to `%APPDATA%\XIVLauncher\addon\Hooks\dev`; use `-p:DalamudLibPath=...` for another location.
 
-For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. README illustrations are stored in `docs/images/`. All current images are generated without game assets. Recreate them on Windows with `dotnet run --project tests/AsMobPlate.Rendering.Tests -- --export .` from the repository root. The exporter draws the implemented ImGui UI and rasterizes its geometry with the bundled default ImGui font.
+For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. README illustrations are stored in `docs/images/`. The introductory settings image is a user-provided UI capture; the other images are generated without game assets. Generate UI illustrations on Windows with `dotnet run --project tests/AsMobPlate.Rendering.Tests -- --export .` from the repository root. This also replaces the introductory capture with a generated settings image. The exporter draws the implemented ImGui UI and rasterizes its geometry with the bundled default ImGui font.
 
 ## Versioning and References
 
