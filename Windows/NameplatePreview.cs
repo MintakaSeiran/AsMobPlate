@@ -19,6 +19,9 @@ public sealed class NameplatePreview
     private float remainingFraction = 0.6f;
     private bool animate;
     private double animationStart;
+    private bool openRequested;
+
+    public void RequestOpen() => this.openRequested = true;
 
     public NameplatePreview(Configuration configuration)
     {
@@ -28,6 +31,11 @@ public sealed class NameplatePreview
 
     public void Draw()
     {
+        if (this.openRequested)
+        {
+            ImGui.SetNextItemOpen(true);
+            this.openRequested = false;
+        }
         if (!ImGui.CollapsingHeader(this.Label("Preview"), ImGuiTreeNodeFlags.DefaultOpen))
         {
             this.animate = false;

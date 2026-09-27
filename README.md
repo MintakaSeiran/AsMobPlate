@@ -6,7 +6,25 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview. Screenshot captured in version 1.0.009; values shown are customized settings, not defaults.*
 
-**Current release:** `1.0.011` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.012` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+
+## Slash Commands
+
+Both `/asmobplate` and `/amp` toggle settings without arguments. Changes are saved immediately.
+
+| Arguments | Action |
+| --- | --- |
+| `config` or `open` / `close` | Open / close settings |
+| `preview` | Open settings and expand the preview |
+| `help` / `status` | Print command help / current settings |
+| `a`, `s` + `on`, `off`, or `toggle` | Enable or disable each hunt rank, including its detection alerts |
+| `sound`, `tts`, `hp`, `percent`, `flag`, `countdown` + `on`, `off`, or `toggle` | Change the corresponding setting |
+| `distance <1-2000>` | Set maximum plate display distance in yalms; notification distances are unchanged |
+| `lang <en|jp|de|fr>` | Select the settings language |
+| `log dump` / `log clear` | Save the debug log to the path printed in chat / clear the in-memory log |
+
+Examples: `/amp a off`, `/amp sound toggle`, `/amp distance 2000`, `/amp lang jp`.
+Commands and arguments are case-insensitive. Invalid arguments show help without changing settings. If another plugin owns an alias, AS Mob Plate leaves that command registered to its owner and records a warning.
 
 ## Features
 
@@ -136,6 +154,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.011` to `1.0.11.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.012` to `1.0.12.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

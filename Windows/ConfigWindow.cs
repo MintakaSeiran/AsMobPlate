@@ -20,6 +20,12 @@ public sealed class ConfigWindow
 
     public bool IsOpen;
 
+    public void OpenPreview()
+    {
+        this.IsOpen = true;
+        this.preview.RequestOpen();
+    }
+
     public ConfigWindow(Configuration configuration, DebugLog debugLog)
     {
         this.configuration = configuration;
@@ -244,7 +250,7 @@ public sealed class ConfigWindow
         ImGui.TextWrapped("https://github.com/MintakaSeiran/AsMobPlate");
     }
 
-    private static string GetDebugDumpPath() => Path.Combine(
+    internal static string GetDebugDumpPath() => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "XIVLauncher", "devPlugins", "AsMobPlate", "debug-log.txt");
 }
