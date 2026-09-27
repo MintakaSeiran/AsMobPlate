@@ -3,10 +3,16 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DalamudLibPath Condition="'$(DalamudLibPath)' == ''">$(APPDATA)/XIVLauncher/addon/Hooks/dev</DalamudLibPath>
   </PropertyGroup>
+  <Target Name="ReadPluginVersion" BeforeTargets="GetAssemblyVersion">
+    <XmlPeek XmlInputPath="../../AsMobPlate.csproj" Query="/Project/PropertyGroup/Version/text()">
+      <Output TaskParameter="Result" PropertyName="Version" />
+    </XmlPeek>
+  </Target>
   <ItemGroup>
     <Reference Include="Dalamud" HintPath="$(DalamudLibPath)/Dalamud.dll" />
     <Reference Include="Dalamud.Bindings.ImGui" HintPath="$(DalamudLibPath)/Dalamud.Bindings.ImGui.dll" />

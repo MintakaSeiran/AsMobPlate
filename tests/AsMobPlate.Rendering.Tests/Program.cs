@@ -41,6 +41,12 @@ unsafe
         if (pixels == null || width <= 0 || height <= 0)
             throw new Exception("Font atlas did not build.");
 
+        if (args.Length == 2 && args[0] == "--export")
+        {
+            DocumentationImages.Export(args[1], pixels, width, height);
+            return;
+        }
+
         var cases = 0;
         foreach (var language in Enum.GetValues<UiLanguage>())
         foreach (var scale in new[] { 0.5f, 1f, 2.5f })

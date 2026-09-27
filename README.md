@@ -4,9 +4,9 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
-*English settings and live preview. Screenshot captured in version 1.0.009; values shown are customized settings, not defaults.*
+*English settings and live preview rendered from the implemented plugin UI on a plain background. All illustrations use sample data, with no game screenshots, characters, environments, or game UI assets.*
 
-**Current release:** `1.0.015` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.016` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
@@ -20,7 +20,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 | ![In-progress nameplate with a dark red background](docs/images/nameplate-in-progress.png) | ![Late arrival warning with a striped outer frame](docs/images/nameplate-arrival-warning.png) |
 | In-progress label and background. | Estimated arrival exceeds the remaining kill time. |
 
-*English preview examples with customized appearance settings. The arrival warning's red/black background animation is shown as a still image.*
+*Rendered English UI examples with sample data. The arrival warning's red/black background animation is shown as a still image.*
 
 ## Arrival Warning
 
@@ -122,15 +122,15 @@ The chat tracker recognizes announcements such as `ET 22:30`, `ET830`, `ET 830`,
 
 ### Chat Detection Example
 
-![In-game chat announcement containing ET115 followed by Japanese start text](docs/images/et-chat-announcement.png)
+![Illustrated chat announcement containing ET115 followed by English start text](docs/images/et-chat-announcement.png)
 
-The announcement above contains `ET115`, which is interpreted as **ET 01:15**. Japanese text immediately after the time does not prevent detection.
+The example announcement above contains `ET115`, which is interpreted as **ET 01:15**. Japanese text immediately after the time is also supported.
 
 ![S-rank nameplate showing receipt ET 00:47, target ET 1:15, and 33 real seconds remaining](docs/images/et-announcement-nameplate.png)
 
-The resulting plate shows the ET captured when the announcement was accepted (`00:47`), the announced start (`1:15`), and the remaining real seconds (`33` in this screenshot). The receipt ET stays fixed while the remaining time updates. Consequently, subtracting the two displayed ET values gives the original wait, not the current remaining wait. One ET minute equals approximately 2.917 real seconds.
+The illustrated plate shows the ET captured when the announcement was accepted (`00:47`), the announced start (`01:15`), and the remaining real seconds (`33` in this example). The receipt ET stays fixed while the remaining time updates. Consequently, subtracting the two displayed ET values gives the original wait, not the current remaining wait. One ET minute equals approximately 2.917 real seconds.
 
-*These screenshots show Japanese in-game chat and UI; the explanations here are in English.*
+*The announcement is an illustrative text panel, not the game's chat UI. The nameplate uses the plugin's actual renderer with a fictional hunt name.*
 
 ### Supported Text Variations
 
@@ -209,10 +209,10 @@ Timing tests cover clock conversion, midnight rollover, duplicate announcements,
 
 The rendering harness defaults to `%APPDATA%\XIVLauncher\addon\Hooks\dev`; use `-p:DalamudLibPath=...` for another location.
 
-For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. The full-size English README screenshot is stored separately in `docs/images/` and is not an installer image.
+For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. README illustrations are stored in `docs/images/`. All current images are generated without game assets. Recreate them on Windows with `dotnet run --project tests/AsMobPlate.Rendering.Tests -- --export .` from the repository root. The exporter draws the implemented ImGui UI and rasterizes its geometry with the bundled default ImGui font.
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.015` to `1.0.15.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.016` to `1.0.16.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).
