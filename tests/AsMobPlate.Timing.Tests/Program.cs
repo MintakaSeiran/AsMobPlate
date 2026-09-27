@@ -1,4 +1,5 @@
 using AsMobPlate.Overlay;
+using AsMobPlate.Localization;
 
 var passed = 0;
 var failed = 0;
@@ -175,6 +176,37 @@ Run("Display formatting does not apply a local time zone or clock offset", () =>
     Equal("13:13", EorzeaStartSchedule.FormatTime(At(13, 13, 59)));
     Equal("13:13:59", EorzeaStartSchedule.FormatTime(At(13, 13, 59), true));
     Equal("00:00:00", EorzeaStartSchedule.FormatTime(At(0, 0), true));
+});
+
+Run("Every UI key has a translation in all four languages", () =>
+{
+    foreach (var key in UiText.Keys)
+    foreach (var language in Enum.GetValues<UiLanguage>())
+    {
+        if (string.IsNullOrWhiteSpace(UiText.Get(key, language)))
+            throw new Exception($"Missing translation: {key}/{language}");
+        Equal(key, UiText.Label(key, language).Split("###")[1]);
+    }
+});
+Run("Countdown placeholders remain valid across languages", () =>
+{
+    foreach (var language in Enum.GetValues<UiLanguage>())
+    {
+        var text = UiText.Format("Announcement countdown", language, "13:13", "13:19", 18);
+        if (!text.Contains("13:13") || !text.Contains("13:19") || !text.Contains("18"))
+            throw new Exception($"Invalid countdown translation: {language}");
+        var start = UiText.Format("Start countdown", language, "13:19", 18);
+        if (!start.Contains("13:19") || !start.Contains("18"))
+            throw new Exception($"Invalid start translation: {language}");
+        var alert = UiText.Format("Hunt detected", language, "S", "Test Hunt");
+        if (!alert.Contains("[S]") || !alert.Contains("Test Hunt"))
+            throw new Exception($"Invalid notification translation: {language}");
+    }
+});
+Run("Invalid saved languages fall back to English", () =>
+{
+    Equal(UiText.Get("Display", UiLanguage.EN), UiText.Get("Display", (UiLanguage)99));
+    Equal("unknown", UiText.Get("unknown", UiLanguage.JP));
 });
 
 Console.WriteLine($"{passed} passed, {failed} failed");

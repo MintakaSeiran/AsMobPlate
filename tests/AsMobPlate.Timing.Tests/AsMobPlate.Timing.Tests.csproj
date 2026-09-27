@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../Overlay/EorzeaStartSchedule.cs" Link="EorzeaStartSchedule.cs" />
+    <Compile Include="../../Localization/UiText.cs" Link="UiText.cs" />
   </ItemGroup>
 </Project>

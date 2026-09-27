@@ -5,6 +5,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using AsMobPlate.Hunts;
+using AsMobPlate.Localization;
 
 namespace AsMobPlate.Overlay;
 
@@ -83,7 +84,7 @@ public sealed class HuntNotifier : IDisposable
             this.QueueGameSound();
 
         if (this.configuration.EnableChatNotification)
-            this.chatGui.Print($"[{rankText}] {name} is in detection range.", "AS Mob Plate");
+            this.chatGui.Print(UiText.Format("Hunt detected", this.configuration.Language, rankText, name), "AS Mob Plate");
 
         if (!this.configuration.EnableTts || this.speechSynthesizer == null)
             return;

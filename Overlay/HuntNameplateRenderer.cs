@@ -4,6 +4,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using AsMobPlate.Hunts;
+using AsMobPlate.Localization;
 
 namespace AsMobPlate.Overlay;
 
@@ -135,7 +136,7 @@ public sealed class HuntNameplateRenderer : IDisposable
         var hpTextSize = ImGui.CalcTextSize(hpText);
         var infoText = BuildInfoText(distance, timeToKill);
         var startText = this.announcedStartTimeTracker.TryGetDisplayText(out var announcedStartText, out var isInProgress, out var startRemainingSeconds) ? announcedStartText : string.Empty;
-        var inProgressText = isInProgress && this.configuration.ShowInProgressLabel ? "討伐中" : string.Empty;
+        var inProgressText = isInProgress && this.configuration.ShowInProgressLabel ? UiText.Get("In progress", this.configuration.Language) : string.Empty;
         var infoSize = ImGui.CalcTextSize(infoText);
         var startSize = ImGui.CalcTextSize(startText);
         var inProgressSize = ImGui.CalcTextSize(inProgressText);
@@ -274,7 +275,8 @@ public sealed class HuntNameplateRenderer : IDisposable
         if (this.configuration.ShowTimeToKill)
         {
             var ttk = FormatTimeToKill(timeToKill);
-            text = text.Length == 0 ? $"ETA {ttk}" : $"{text}  ETA {ttk}";
+            var etaLabel = UiText.Get("ETA", this.configuration.Language);
+            text = text.Length == 0 ? $"{etaLabel} {ttk}" : $"{text}  {etaLabel} {ttk}";
         }
 
         return text;

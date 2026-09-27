@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Dalamud.Game.Chat;
 using Dalamud.Plugin.Services;
+using AsMobPlate.Localization;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using GameFramework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;
@@ -71,8 +72,8 @@ public sealed class AnnouncedStartTimeTracker : IDisposable
         isInProgress = remainingSeconds <= 0.0;
         var seconds = Math.Max(0, (int)Math.Ceiling(remainingSeconds));
         text = this.configuration.ShowEtAtAnnouncement
-            ? $"ET {this.announcedAtEtText} -> {this.startEtText}  in {seconds}s"
-            : $"Start ET {this.startEtText}  in {seconds}s";
+            ? UiText.Format("Announcement countdown", this.configuration.Language, this.announcedAtEtText, this.startEtText, seconds)
+            : UiText.Format("Start countdown", this.configuration.Language, this.startEtText, seconds);
         return true;
     }
 

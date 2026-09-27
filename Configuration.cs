@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using AsMobPlate.Localization;
 
 namespace AsMobPlate;
 
@@ -12,6 +13,7 @@ public sealed class Configuration : IPluginConfiguration
     private IDalamudPluginInterface? pluginInterface;
 
     public int Version { get; set; } = 9;
+    public UiLanguage Language = UiLanguage.JP;
 
     public bool ShowARank = true;
     public bool ShowSRank = true;

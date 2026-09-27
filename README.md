@@ -4,7 +4,7 @@ Small Dalamud dev plugin for showing and tracking only FFXIV A-rank and S-rank h
 
 ## Version
 
-Current release: `1.0.007`.
+Current release: `1.0.008`.
 
 Author: MintakaSeiran.
 
@@ -183,6 +183,10 @@ dotnet build -c Debug
 API定義の確認元: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs)、[UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs)、[Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs)。ローカルに同梱されたDLLでも該当フィールド・メソッドを確認しています。
 
 ## Settings
+
+Version 1.0.008 introduces a resizable tabbed settings window: Display, Alerts, Start time, Appearance, Log, and Info. The EN / JP / DE / FR selector stays above the tabs. The selected language is saved immediately; the initial language is JP. Existing settings retain their values.
+
+Translations cover settings, units, tabs, fixed nameplate text, countdown text, and chat detection notices. Hunt names follow the game's language. User-authored TTS text and diagnostic log entries remain unchanged. Translation strings are maintained in `Localization/UiText.cs`; stable ImGui IDs preserve control identity when switching languages. Long field labels wrap above their controls, and each tab scrolls independently.
 
 Open settings with:
 
