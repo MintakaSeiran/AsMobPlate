@@ -58,6 +58,16 @@ Commands and arguments are case-insensitive. Invalid arguments show help without
 - Tabbed settings with EN, JP, DE, and FR translations and a live in-window preview.
 - Standalone operation: no runtime dependency on HuntHelper.
 
+## Companion Plugin: HuntAlerts
+
+[HuntAlerts](https://puni.sh/directory/asuna/huntalerts) notifies you when hunt trains are starting soon. Using it alongside AS Mob Plate can make hunting more convenient: HuntAlerts helps you find upcoming trains, while AS Mob Plate shows local A/S hunt HP, distance, announced ET starts, and arrival estimates once a hunt is available in the game's object table.
+
+- [HuntAlerts source repository](https://projects.gamba.pro/Asuna/huntalerts)
+- [Asuna's plugin repository and installation information](https://puni.sh/directory/asuna)
+- Custom Dalamud repository URL: `https://puni.sh/api/repository/asuna`
+
+The plugins operate independently. AS Mob Plate does not require HuntAlerts, control its settings, or import its notification feed. ET countdowns still depend on supported chat announcements received by AS Mob Plate. If notifications overlap, adjust sound and TTS settings in each plugin to your preference.
+
 ## Settings and Preview
 
 Open settings with:
