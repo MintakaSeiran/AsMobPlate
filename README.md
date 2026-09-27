@@ -8,6 +8,20 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 **Current release:** `1.0.015` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
+## Nameplate Examples
+
+| Idle | Countdown |
+| --- | --- |
+| ![Idle A-rank nameplate with HP and distance](docs/images/nameplate-idle.png) | ![ET countdown with a shrinking outer frame](docs/images/nameplate-countdown.png) |
+| HP and distance without an announced start. | Announced ET start and remaining real seconds. |
+
+| In Progress | Arrival Warning |
+| --- | --- |
+| ![In-progress nameplate with a dark red background](docs/images/nameplate-in-progress.png) | ![Late arrival warning with a striped outer frame](docs/images/nameplate-arrival-warning.png) |
+| In-progress label and background. | Estimated arrival exceeds the remaining kill time. |
+
+*English preview examples with customized appearance settings. The arrival warning's red/black background animation is shown as a still image.*
+
 ## Arrival Warning
 
 For A/S hunts in combat at least 200 yalms away, the overlay estimates arrival from two-second samples of the player's movement projected toward the hunt. Arrival time is `(distance - arrival distance) / closing speed + preparation time`. Defaults are 25 yalms and 3 seconds. These are configurable estimates, not action-range checks or pathfinding.
