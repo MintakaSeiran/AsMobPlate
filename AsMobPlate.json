@@ -1,9 +1,13 @@
 {
-  "Author": "Codex",
+  "Author": "MintakaSeiran",
   "Name": "AS Mob Plate",
   "Punchline": "Compact nameplates for A/S rank hunt marks.",
   "Description": "Displays simple overhead nameplates only for A and S rank hunt marks, using BNpcName/NameId based detection.",
   "InternalName": "AsMobPlate",
+  "IconUrl": "https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/images/icon.png",
+  "ImageUrls": [
+    "https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/images/image1.png"
+  ],
   "ApplicableVersion": "any",
   "Tags": [
     "hunt",

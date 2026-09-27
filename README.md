@@ -4,7 +4,13 @@ Small Dalamud dev plugin for showing and tracking only FFXIV A-rank and S-rank h
 
 ## Version
 
-Current release: `1.0.006`.
+Current release: `1.0.007`.
+
+Author: MintakaSeiran.
+
+## Plugin Images
+
+The plugin installer uses `images/icon.png` for its square thumbnail and `images/image1.png` for the original gameplay screenshot. Both images are copied beside the DLL under `images/` for local dev-plugin loading. The manifest also points to the repository-hosted images.
 
 修正を反映するたびに末尾を1ずつ増やします: `1.0.005` → `1.0.006` → `1.0.007`。
 正本は `AsMobPlate.csproj` の `Version` です。.NET/Dalamud側の数値バージョンは先頭ゼロが省略され、`1.0.005` は `1.0.5.0` と表示される場合があります。
