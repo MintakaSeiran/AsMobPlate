@@ -110,6 +110,33 @@ An object is notified once while it remains in range. Leaving range or disappear
 
 The chat tracker recognizes announcements such as `ET 22:30`, `ET830`, `ET 830`, `22:30 start`, and `pull 22:30`. The game's special ET glyph and Japanese start keywords are also supported. Plain numbers without a recognized marker are not treated as announcements.
 
+### Chat Detection Example
+
+![In-game chat announcement containing ET115 followed by Japanese start text](docs/images/et-chat-announcement.png)
+
+The announcement above contains `ET115`, which is interpreted as **ET 01:15**. Japanese text immediately after the time does not prevent detection.
+
+![S-rank nameplate showing receipt ET 00:47, target ET 1:15, and 33 real seconds remaining](docs/images/et-announcement-nameplate.png)
+
+The resulting plate shows the ET captured when the announcement was accepted (`00:47`), the announced start (`1:15`), and the remaining real seconds (`33` in this screenshot). The receipt ET stays fixed while the remaining time updates. Consequently, subtracting the two displayed ET values gives the original wait, not the current remaining wait. One ET minute equals approximately 2.917 real seconds.
+
+*These screenshots show Japanese in-game chat and UI; the explanations here are in English.*
+
+### Supported Text Variations
+
+| Input | Interpreted ET |
+| --- | --- |
+| `ET115`, `ET0115` | 01:15 |
+| `ET1:15`, `et 01:15` | 01:15 |
+| Full-width `ＥＴ１：１５` | 01:15 |
+| Mixed-width `ET１０：４０` | 10:40 |
+| In-game ET glyph (U+E0D2) followed by `830` | 08:30 |
+| `1:15 start`, `pull 1:15` | 01:15 |
+
+Full-width Latin letters, digits and colons are normalized before matching. ET letters are case-insensitive, and whitespace is allowed around the colon and after the ET marker. Colonless times require an ET marker or the game's ET glyph. Colon-form times require a recognized keyword somewhere in the message, such as ET, start, pull, or a supported Japanese start keyword.
+
+This is pattern matching, not natural-language understanding: arbitrary typos and all possible wording variations are not supported. Announcements are also checked against the configured ET window. The tracker does not match a hunt name in the message; the accepted schedule is shared by displayed A/S hunts in the current territory.
+
 Example plate text:
 
 ```text
