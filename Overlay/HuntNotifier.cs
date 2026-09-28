@@ -18,14 +18,16 @@ public sealed class HuntNotifier : IDisposable
     private readonly HashSet<ulong> visibleNow = new();
     private readonly HashSet<ulong> visibleThisFrame = new();
     private readonly SpeechSynthesizer? speechSynthesizer;
-    private int remainingSoundRepeats;
-    private DateTime nextSoundAt = DateTime.MinValue;
+    private readonly NotificationSoundSequence sounds = new();
+    private readonly IFramework framework;
 
-    public HuntNotifier(Configuration configuration, IChatGui chatGui, IPluginLog pluginLog)
+    public HuntNotifier(Configuration configuration, IChatGui chatGui, IPluginLog pluginLog, IFramework framework)
     {
         this.configuration = configuration;
         this.chatGui = chatGui;
         this.pluginLog = pluginLog;
+        this.framework = framework;
+        this.framework.Update += this.OnUpdate;
 
         try
         {
@@ -40,7 +42,6 @@ public sealed class HuntNotifier : IDisposable
     public void BeginFrame()
     {
         this.visibleThisFrame.Clear();
-        this.ProcessSoundQueue();
     }
 
     public void Seen(IBattleNpc npc, HuntRank rank)
@@ -69,8 +70,20 @@ public sealed class HuntNotifier : IDisposable
 
     public void Dispose()
     {
+        this.framework.Update -= this.OnUpdate;
+        this.sounds.Clear();
         this.speechSynthesizer?.Dispose();
     }
+
+    public void NotifySsTrigger()
+    {
+        if (!this.configuration.EnableNotificationSound)
+            return;
+        this.sounds.Queue(5, HuntProgressTracker.Now, true);
+        this.ProcessSoundQueue();
+    }
+
+    private void OnUpdate(IFramework _) => this.ProcessSoundQueue();
 
     private void Notify(IBattleNpc npc, HuntRank rank)
     {
@@ -104,18 +117,18 @@ public sealed class HuntNotifier : IDisposable
 
     private void QueueGameSound()
     {
-        this.remainingSoundRepeats = Math.Clamp(this.configuration.SoundRepeatCount, 1, 20);
-        this.nextSoundAt = DateTime.UtcNow;
+        this.sounds.Queue(this.configuration.SoundRepeatCount, HuntProgressTracker.Now);
         this.ProcessSoundQueue();
     }
 
     private void ProcessSoundQueue()
     {
-        if (this.remainingSoundRepeats <= 0)
+        if (!this.configuration.EnableNotificationSound)
+        {
+            this.sounds.Clear();
             return;
-
-        var now = DateTime.UtcNow;
-        if (now < this.nextSoundAt)
+        }
+        if (!this.sounds.Take(HuntProgressTracker.Now, this.configuration.SoundRepeatIntervalSeconds))
             return;
 
         try
@@ -124,13 +137,11 @@ public sealed class HuntNotifier : IDisposable
         }
         catch (Exception ex)
         {
-            this.remainingSoundRepeats = 0;
+            this.sounds.Clear();
             this.pluginLog.Warning(ex, "Failed to play AS hunt game sound effect.");
             return;
         }
 
-        this.remainingSoundRepeats--;
-        this.nextSoundAt = now.AddSeconds(Math.Max(0.05f, this.configuration.SoundRepeatIntervalSeconds));
     }
 
     private static ulong GetObjectKey(IBattleNpc npc)

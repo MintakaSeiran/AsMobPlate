@@ -25,6 +25,7 @@ public sealed class HuntProgressTracker : IDisposable
     private readonly HuntMarkRegistry registry;
     private readonly DebugLog log;
     private readonly Action clearStartTime;
+    private readonly Action notifySsTrigger;
     private readonly string startMessage;
     private readonly string returnMessage;
     private (uint Territory, uint World, uint Instance) context;
@@ -38,7 +39,7 @@ public sealed class HuntProgressTracker : IDisposable
 
     public HuntProgressTracker(Configuration config, IClientState client, IObjectTable objects,
         IFramework framework, IChatGui chat, ICondition condition, IDataManager data,
-        HuntMarkRegistry registry, DebugLog log, Action clearStartTime)
+        HuntMarkRegistry registry, DebugLog log, Action clearStartTime, Action notifySsTrigger)
     {
         this.config = config;
         this.client = client;
@@ -49,6 +50,7 @@ public sealed class HuntProgressTracker : IDisposable
         this.registry = registry;
         this.log = log;
         this.clearStartTime = clearStartTime;
+        this.notifySsTrigger = notifySsTrigger;
         // LogMessage 9332/9334 use LogKind 57; ACT's 0839 includes source flags.
         var sheet = data.GetExcelSheet<LogMessage>();
         this.startMessage = sheet.GetRow(9332).Text.ToString();
@@ -162,10 +164,11 @@ public sealed class HuntProgressTracker : IDisposable
         {
             if (this.disposed || territory != this.client.TerritoryType || !this.RefreshContext()
                 || receivedGeneration != this.generation || !HuntMarkRegistry.IsSsTerritory(this.context.Territory)) return;
-            if (start)
+            if (start && this.Progress.Start(Now))
             {
-                this.Progress.Start(Now);
                 this.clearStartTime();
+                this.notifySsTrigger();
+                this.log.Add("SS trigger alert requested: 5 sounds (respects notification sound setting)");
             }
             if (returned) this.Progress.Return(Now);
             if (report && this.Progress.Stage != HuntStage.None) this.reportUntil = Now + 30;

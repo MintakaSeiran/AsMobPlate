@@ -42,14 +42,15 @@ public sealed class HuntProgress
         this.LastActivity = 0;
     }
 
-    public void Start(double now)
+    public bool Start(double now)
     {
         // Duplicate delivery must not reset the deadline or observed kills.
         if (this.StartedAt is double start && now - start < 5)
-            return;
+            return false;
         this.defeatedMinions.Clear();
         this.StartedAt = now;
         this.SetStage(HuntStage.Searching, now);
+        return true;
     }
 
     public void Return(double now)

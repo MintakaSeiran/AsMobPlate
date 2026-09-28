@@ -6,7 +6,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.019` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.020` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
@@ -37,6 +37,8 @@ Version 1.0.018 adds independent Display switches for SS minions, SS bosses, a n
 All six IDs were verified against ACT `261` object-add records from September 24-26, 2026. Territory IDs were cross-checked against the [TerritoryType game-data extract](https://github.com/xivapi/ffxiv-datamining/blob/master/csv/en/TerritoryType.csv). Detection uses `IBattleNpc.NameId`, never display names, HP magnitude, levels, rank fields or icons. SS plates and minion plates use the S notification distance and text color. The registry has no runtime dependency on another plugin.
 
 ### Progress Rules
+
+From version 1.0.020, a confirmed scouting-start system message queues **five notification sounds**, using the existing sound effect ID and repeat interval. The notification sound switch also controls this alert; disabling it cancels pending sounds. The trigger count is fixed at five, independently of the ordinary detection repeat count. Duplicate start messages within five seconds do not retrigger it. Ordinary object detections cannot interrupt this sequence. Sounds advance on framework updates even when the overlay is hidden; object detection alone, END reports, return messages and a missed start announcement do not generate this trigger alert.
 
 - Read game-localized `LogMessage` rows 9332 (minions begin scouting) and 9334 (minions return) using Dalamud's data manager. Require system LogKind 57 and an exact message match. ACT's raw `0839` includes extra flags and is not used as a Dalamud enum value. These rows are present in the [game-data extract](https://github.com/xivapi/ffxiv-datamining/blob/master/csv/ja/LogMessage.csv).
 - In an eligible territory, the scouting message starts the event without requiring the player's S-rank reward. A known minion or boss can also establish an observed stage when the start message was missed.
@@ -242,6 +244,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.019` to `1.0.19.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.020` to `1.0.20.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

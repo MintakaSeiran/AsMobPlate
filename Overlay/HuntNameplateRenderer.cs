@@ -44,12 +44,12 @@ public sealed class HuntNameplateRenderer : IDisposable
         this.objectTable = objectTable;
         this.gameGui = gameGui;
         this.pluginLog = pluginLog;
-        this.notifier = new HuntNotifier(configuration, chatGui, pluginLog);
+        this.notifier = new HuntNotifier(configuration, chatGui, pluginLog, framework);
         this.mapFlagger = new HuntMapFlagger(configuration, gameGui, clientState, pluginLog);
         this.announcedStartTimeTracker = new AnnouncedStartTimeTracker(configuration, chatGui, framework, clientState, pluginLog, this.DebugLog);
         this.progressTracker = new HuntProgressTracker(configuration, clientState, objectTable, framework,
             chatGui, condition, dataManager, registry, this.DebugLog,
-            () => this.announcedStartTimeTracker.Clear("hunt context or SS event changed"));
+            () => this.announcedStartTimeTracker.Clear("hunt context or SS event changed"), this.notifier.NotifySsTrigger);
     }
 
     public void Draw()

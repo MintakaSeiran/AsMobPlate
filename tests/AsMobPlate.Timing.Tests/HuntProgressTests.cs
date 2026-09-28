@@ -5,6 +5,32 @@ internal static class HuntProgressTests
 {
     public static void Run(Action<string, Action> run)
     {
+        run("SS trigger accepts one alert for duplicate messages", () =>
+        {
+            var p = new HuntProgress();
+            Check(p.Start(10));
+            Check(!p.Start(11));
+            Check(p.Start(100));
+        });
+        run("SS alert plays five spaced sounds despite ordinary detections", () =>
+        {
+            var sounds = new AsMobPlate.Overlay.NotificationSoundSequence();
+            sounds.Queue(4, 0);
+            sounds.Queue(5, 0, true);
+            for (var i = 0; i < 5; i++)
+            {
+                var now = i * 0.25;
+                sounds.Queue(4, now);
+                Check(sounds.Take(now, 0.25));
+                Check(!sounds.Take(now + 0.1, 0.25));
+            }
+            sounds.Queue(4, 1.1);
+            Check(!sounds.Take(1.25, 0.25));
+            sounds.Queue(4, 2);
+            Check(sounds.Take(2, 0.25));
+            sounds.Clear();
+            Check(!sounds.Take(3, 0.25));
+        });
         run("Arrival warning survives missing and improved estimates and disappearance", () =>
         {
             var p = new HuntProgress();
