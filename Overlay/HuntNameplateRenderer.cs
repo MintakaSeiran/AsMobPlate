@@ -22,6 +22,7 @@ public sealed class HuntNameplateRenderer : IDisposable
     private readonly AnnouncedStartTimeTracker announcedStartTimeTracker;
     private readonly HpTracker hpTracker = new();
     private readonly ArrivalEstimator arrivalEstimator = new();
+    private readonly HuntProgressTracker progressTracker;
 
     public DebugLog DebugLog { get; } = new();
 
@@ -33,7 +34,9 @@ public sealed class HuntNameplateRenderer : IDisposable
         IClientState clientState,
         IChatGui chatGui,
         IFramework framework,
-        IPluginLog pluginLog)
+        IPluginLog pluginLog,
+        ICondition condition,
+        IDataManager dataManager)
     {
         this.configuration = configuration;
         this.painter = new NameplatePainter(configuration);
@@ -44,6 +47,9 @@ public sealed class HuntNameplateRenderer : IDisposable
         this.notifier = new HuntNotifier(configuration, chatGui, pluginLog);
         this.mapFlagger = new HuntMapFlagger(configuration, gameGui, clientState, pluginLog);
         this.announcedStartTimeTracker = new AnnouncedStartTimeTracker(configuration, chatGui, framework, clientState, pluginLog, this.DebugLog);
+        this.progressTracker = new HuntProgressTracker(configuration, clientState, objectTable, framework,
+            chatGui, condition, dataManager, registry, this.DebugLog,
+            () => this.announcedStartTimeTracker.Clear("hunt context or SS event changed"));
     }
 
     public void Draw()
@@ -75,10 +81,10 @@ public sealed class HuntNameplateRenderer : IDisposable
                 if (rank == HuntRank.None)
                     continue;
 
-                if ((rank == HuntRank.A && !this.configuration.ShowARank) || (rank == HuntRank.S && !this.configuration.ShowSRank))
+                if (!this.progressTracker.IsShown(rank))
                     continue;
 
-                if (npc.MaxHp == 0 || npc.CurrentHp == 0)
+                if (npc.MaxHp == 0 || npc.CurrentHp == 0 || npc.IsDead)
                     continue;
 
                 var distanceSq = Vector3.DistanceSquared(localPlayer.Position, npc.Position);
@@ -100,6 +106,7 @@ public sealed class HuntNameplateRenderer : IDisposable
                     this.DrawNameplate(npc, rank, distance, timeToKill, arrival);
                 }
             }
+            this.progressTracker.Draw(this.gameGui, this.painter, localPlayer.Position);
         }
         catch (Exception ex)
         {
@@ -115,6 +122,7 @@ public sealed class HuntNameplateRenderer : IDisposable
 
     public void Dispose()
     {
+        this.progressTracker.Dispose();
         this.announcedStartTimeTracker.Dispose();
         this.notifier.Dispose();
     }
@@ -126,6 +134,12 @@ public sealed class HuntNameplateRenderer : IDisposable
             return;
 
         var hasStart = this.announcedStartTimeTracker.TryGetDisplayText(out var startText, out var inProgress, out var remaining);
+        if (rank == HuntRank.Minion)
+        {
+            hasStart = false;
+            inProgress = (npc.StatusFlags & StatusFlags.InCombat) != 0;
+            remaining = 0;
+        }
         var data = new NameplateData(rank, npc.Name.ToString(), npc.ObjectIndex,
             (float)npc.CurrentHp / npc.MaxHp, distance, timeToKill,
             hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival);

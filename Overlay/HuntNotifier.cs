@@ -74,7 +74,7 @@ public sealed class HuntNotifier : IDisposable
 
     private void Notify(IBattleNpc npc, HuntRank rank)
     {
-        var rankText = rank == HuntRank.A ? "A" : "S";
+        var rankText = rank == HuntRank.Minion ? UiText.Get("Minion", this.configuration.Language) : rank.ToString();
         var name = npc.Name.ToString();
         var message = this.configuration.TtsFormat
             .Replace("{rank}", rankText, StringComparison.OrdinalIgnoreCase)

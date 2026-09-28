@@ -5,4 +5,6 @@ public enum HuntRank
     None,
     A,
     S,
+    Minion,
+    SS,
 }

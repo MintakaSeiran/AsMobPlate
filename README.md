@@ -6,7 +6,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.017` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.018` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
@@ -21,6 +21,41 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 | In-progress label and background. | Estimated arrival exceeds the remaining kill time. |
 
 *User-provided English S-rank preview captures with sample data and customized appearance settings. The arrival warning's red/black background animation is shown as a still image.*
+
+## SS Events and Defeated Hunts
+
+Version 1.0.018 adds independent Display switches for SS minions, SS bosses, a non-interactive progress panel, and defeated plates. All default to enabled. Defeated plates remain for 30 seconds by default (configurable from 1 to 300 seconds). Panel X/Y settings place the overlay relative to the main viewport; it never captures mouse or keyboard input.
+
+### Verified Identities
+
+| Expansion | SS boss / BNpcName ID | Minion / BNpcName ID | Territory IDs |
+| --- | --- | --- | --- |
+| Shadowbringers | Forgiven Rebellion / 8915 (`0x22D3`) | Forgiven Gossip / 8916 (`0x22D4`) | 813-818 |
+| Endwalker | Ker / 10615 (`0x2977`) | Ker Shroud / 10616 (`0x2978`) | 956-961 |
+| Dawntrail | Arch Aethereater / 13406 (`0x345E`) | Crystal Incarnation / 13407 (`0x345F`) | 1187-1192 |
+
+All six IDs were verified against ACT `261` object-add records from September 24-26, 2026. Territory IDs were cross-checked against the [TerritoryType game-data extract](https://github.com/xivapi/ffxiv-datamining/blob/master/csv/en/TerritoryType.csv). Detection uses `IBattleNpc.NameId`, never display names, HP magnitude, levels, rank fields or icons. SS plates and minion plates use the S notification distance and text color. The registry has no runtime dependency on another plugin.
+
+### Progress Rules
+
+- Read game-localized `LogMessage` rows 9332 (minions begin scouting) and 9334 (minions return) using Dalamud's data manager. Require system LogKind 57 and an exact message match. ACT's raw `0839` includes extra flags and is not used as a Dalamud enum value. These rows are present in the [game-data extract](https://github.com/xivapi/ffxiv-datamining/blob/master/csv/ja/LogMessage.csv).
+- In an eligible territory, the scouting message starts the event without requiring the player's S-rank reward. A known minion or boss can also establish an observed stage when the start message was missed.
+- Display searching, observed minion combat, boss detected, boss defeated, or minions returned. Boss confirmation requires its matching NameId for this territory group. Four observed minion deaths alone never imply that the boss has been detected.
+- Count unique observed dead minion object IDs, labeled **Observed defeats**, not **Remaining**. Remote deaths are not guaranteed to appear in the local object table. Zero HP or the object's dead state confirms death; disappearance and reward messages alone do not.
+- For Shadowbringers/Endwalker only, show a five-minute **engagement guideline** when the actual start message was received. At zero, display **Awaiting outcome confirmation**, never automatic failure. The [Shadowbringers](https://jp.finalfantasyxiv.com/lodestone/character/35119336/blog/4956886/) and [Endwalker](https://jp.finalfantasyxiv.com/lodestone/character/35119336/blog/4956894/) player reports describe time to engage, not time to complete all kills. Dawntrail has no assumed timer.
+- Say/Shout/Yell completion reports ending in `END`, or containing the supported Japanese completion phrases, show an unconfirmed informational notice for 30 seconds during an active event. They never mark an individual dead, increment kills or confirm an SS spawn.
+- Clear tracking on loading, logout, territory, current-world or public-instance changes. An abandoned event expires after 30 minutes without observations, without reporting a failure. Terminal panel states use the defeated display duration.
+- Reset the old ET schedule on context changes and an SS scouting announcement so the previous S start is not reused. Minion plates do not display an announced ET start.
+
+### Defeated Plates
+
+Confirmed dead A/S hunts, SS minions and bosses retain copied name, object index, last observed position and death time. Their plate shows zero HP, distance to that position, a defeated label and elapsed seconds, using the warning frame and red/black pulse. It obeys the relevant rank switch and maximum display distance. No position or identity is invented for an unobserved hunt. Expiry is measured from the first observed death and is not extended while a corpse remains loaded.
+
+Tracking runs on framework updates independently of drawing. Observations are capped at 256, temporary removal buffers are reused, and names are copied once per observed identity. Chat and framework events are unsubscribed on disposal. No new targeting, mount, AI or other-plugin control is introduced.
+
+### Verification
+
+Automated tests cover known IDs, regular-B exclusion, disappearances, the five-minute boundary, duplicate deaths, duplicate announcements, stage precedence, return, context reset and unsupported territories. Native ImGui tests cover minion/SS/dead plates across four UI languages and multiple scales. In-game acceptance still requires checking localized system messages, instance transitions, distant unobserved kills and the final GPU-rendered panel. Unknown spawn probabilities, a separate SSS tier and unverified boss-reset behavior are not encoded.
 
 ## Arrival Warning
 
@@ -50,7 +85,7 @@ Commands and arguments are case-insensitive. Invalid arguments show help without
 
 ## Features
 
-- A/S-only nameplates with a translucent background, rank label, HP bar, HP percentage, and optional object index.
+- NameId-based A/S and SS nameplates, with a specific allowlist for SS minions. Normal B ranks remain excluded.
 - Distance and estimated time to kill based on observed HP loss.
 - Announced ET start times, remaining real seconds, and an in-progress state with a separate background color.
 - A shrinking countdown outline with independently adjustable thickness.
@@ -80,7 +115,7 @@ The window has **Display**, **Alerts**, **Start time**, **Appearance**, **Log**,
 
 The collapsible preview uses the same `NameplatePainter` as the live overlay. Switch between A/S ranks, adjust sample HP from 0 to 100%, and inspect idle, countdown, or in-progress states. Appearance changes are reflected on the next frame. Countdown animation repeats the configured countdown followed by three seconds in progress.
 
-Preview plates retain their configured scale and scroll when larger than the available area. Sample data includes a distance of 23 yalms, object index 118, and a 75-second ETA below full HP. Zero HP is available only for appearance testing; dead hunts are excluded from the live overlay.
+Preview plates retain their configured scale and scroll when larger than the available area. Sample data includes a distance of 23 yalms, object index 118, and a 75-second ETA below full HP. Select A, S, SS or Minion and the Defeated mode to inspect the new states without sending notifications or game commands.
 
 Preview controls are temporary and do not change live hunt data or ET schedules. They do not trigger sounds, TTS, chat notices, map flags, or game countdown commands. World positioning, Y offset, and actual detection ranges must be checked in game.
 
@@ -90,7 +125,7 @@ Translations cover settings, units, tabs, fixed plate text, countdown text, and 
 
 `Hunts/HuntMarkRegistry.cs` contains explicit A/S `NameId` allow-lists covering A Realm Reborn through Dawntrail. Each frame, the renderer scans `IObjectTable` for `IBattleNpc` entries and checks `IBattleNpc.NameId`. It never guesses hunt rank from names, levels, HP totals, icons, or a rank field.
 
-Normal enemies, B ranks, FATE mobs, other NPCs, and players are excluded. Entries with zero maximum HP or zero current HP are skipped. Plates disappear when objects leave the object table and do not require targeting or combat.
+Normal enemies, ordinary B ranks, FATE mobs, other NPCs, and players are excluded. The three verified SS minion identities are explicit exceptions. Entries with zero maximum HP are ignored. Living plates disappear when objects leave the object table; confirmed dead snapshots can remain for the configured duration. Neither targeting nor combat is required.
 
 | Setting | Default | Maximum |
 | --- | --- | --- |
@@ -207,6 +242,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.017` to `1.0.17.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.018` to `1.0.18.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

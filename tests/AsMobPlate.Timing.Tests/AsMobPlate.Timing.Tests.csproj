@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../Hunts/HuntRank.cs" Link="HuntRank.cs" />
+    <Compile Include="../../Hunts/HuntMarkRegistry.cs" Link="HuntMarkRegistry.cs" />
+    <Compile Include="../../Hunts/HuntProgress.cs" Link="HuntProgress.cs" />
     <Compile Include="../../Overlay/EorzeaStartSchedule.cs" Link="EorzeaStartSchedule.cs" />
     <Compile Include="../../Overlay/AnnouncementTextParser.cs" Link="AnnouncementTextParser.cs" />
     <Compile Include="../../Localization/UiText.cs" Link="UiText.cs" />

@@ -28,7 +28,8 @@ public sealed class NameplatePainter
         var paddingY = PaddingY * scale;
         var gapY = GapY * scale;
 
-        var rankTag = data.Rank == HuntRank.A ? "[A]" : "[S]";
+        var rankTag = data.Rank == HuntRank.Minion
+            ? $"[{UiText.Get("Minion", this.configuration.Language)}]" : $"[{data.Rank}]";
         var objectIndexSuffix = this.configuration.ShowObjectIndex ? $" [{data.ObjectIndex}]" : string.Empty;
         var nameText = $"{rankTag} {data.Name}{objectIndexSuffix}";
         var nameSize = ImGui.CalcTextSize(nameText);
@@ -37,7 +38,9 @@ public sealed class NameplatePainter
         var hpRatio = Math.Clamp(data.HpRatio, 0.0f, 1.0f);
         var hpText = $"{hpRatio * 100.0f:0}%";
         var hpTextSize = ImGui.CalcTextSize(hpText);
-        var infoText = BuildInfoText(data.Distance, data.TimeToKill);
+        var infoText = data.IsDefeated
+            ? (this.configuration.ShowDistance ? $"{data.Distance:0}y" : string.Empty)
+            : BuildInfoText(data.Distance, data.TimeToKill);
         var tooLate = this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double arrival
             && data.TimeToKill is TimeSpan ttk && arrival > ttk.TotalSeconds;
         if (this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double seconds)
@@ -47,7 +50,8 @@ public sealed class NameplatePainter
         var startText = data.StartText;
         var isInProgress = data.IsInProgress;
         var startRemainingSeconds = data.RemainingSeconds;
-        var inProgressText = isInProgress && this.configuration.ShowInProgressLabel ? UiText.Get("In progress", this.configuration.Language) : string.Empty;
+        var inProgressText = data.IsDefeated ? UiText.Get("Defeated", this.configuration.Language)
+            : isInProgress && this.configuration.ShowInProgressLabel ? UiText.Get("In progress", this.configuration.Language) : string.Empty;
         var infoSize = ImGui.CalcTextSize(infoText);
         var startSize = ImGui.CalcTextSize(startText);
         var inProgressSize = ImGui.CalcTextSize(inProgressText);
@@ -71,7 +75,7 @@ public sealed class NameplatePainter
         var bottomRight = topLeft + boxSize;
 
         var backgroundColor = isInProgress ? this.configuration.InProgressBackgroundColor : this.configuration.BackgroundColor;
-        if (tooLate)
+        if (tooLate || data.IsDefeated)
         {
             // A slow, continuous pulse keeps the text readable without abrupt flashes.
             var pulse = (float)(0.5 - 0.5 * Math.Cos(ImGui.GetTime() * Math.PI));
@@ -263,4 +267,5 @@ public readonly record struct NameplateData(
     bool IsInProgress,
     double RemainingSeconds,
     int CountdownWindowSeconds,
-    double? ArrivalSeconds = null);
+    double? ArrivalSeconds = null,
+    bool IsDefeated = false);

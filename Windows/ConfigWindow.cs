@@ -104,6 +104,13 @@ public sealed class ConfigWindow
     {
         var changed = this.Checkbox("Show A rank", ref this.configuration.ShowARank);
         changed |= this.Checkbox("Show S rank", ref this.configuration.ShowSRank);
+        changed |= this.Checkbox("Show SS minions", ref this.configuration.ShowSsMinions);
+        changed |= this.Checkbox("Show SS boss", ref this.configuration.ShowSsBoss);
+        changed |= this.Checkbox("Show hunt progress", ref this.configuration.ShowHuntProgress);
+        changed |= this.Checkbox("Show defeated", ref this.configuration.ShowDefeated);
+        changed |= this.SliderFloat("Defeated display duration", ref this.configuration.DefeatedDisplaySeconds, 1, 300, this.Text("Seconds unit"));
+        changed |= this.SliderFloat("Progress panel X", ref this.configuration.HuntProgressPosition.X, 0, Math.Max(0, ImGui.GetMainViewport().Size.X - 320), "%.0f px");
+        changed |= this.SliderFloat("Progress panel Y", ref this.configuration.HuntProgressPosition.Y, 0, Math.Max(0, ImGui.GetMainViewport().Size.Y - 150), "%.0f px");
         changed |= this.Checkbox("Show HP bar", ref this.configuration.ShowHpBar);
         changed |= this.Checkbox("Show HP percent", ref this.configuration.ShowHpPercent);
         changed |= this.Checkbox("Show distance", ref this.configuration.ShowDistance);

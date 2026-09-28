@@ -53,11 +53,13 @@ unsafe
         foreach (var hp in new[] { 0f, 0.5f, 1f })
         foreach (var inProgress in new[] { false, true })
         foreach (var late in new[] { false, true })
+        foreach (var rank in new[] { HuntRank.S, HuntRank.Minion, HuntRank.SS })
+        foreach (var defeated in new[] { false, true })
         {
             var configuration = new Configuration { Language = language, Scale = scale, CountdownFrameThickness = 10 };
             var painter = new NameplatePainter(configuration);
-            var data = new NameplateData(HuntRank.S, UiText.Get("Preview hunt name", language), 118, hp, 23,
-                TimeSpan.FromSeconds(75), UiText.Format("Start countdown", language, "13:19", 6), inProgress, 6, 10, late ? 100 : null);
+            var data = new NameplateData(rank, UiText.Get("Preview hunt name", language), 118, defeated ? 0 : hp, 23,
+                TimeSpan.FromSeconds(75), UiText.Format("Start countdown", language, "13:19", 6), inProgress, 6, 10, late ? 100 : null, defeated);
             ImGui.NewFrame();
             ImGui.SetNextWindowPos(Vector2.Zero);
             ImGui.SetNextWindowSize(io.DisplaySize);

@@ -34,7 +34,9 @@ public sealed class Plugin : IDalamudPlugin
         IClientState clientState,
         IChatGui chatGui,
         IFramework framework,
-        IPluginLog pluginLog)
+        IPluginLog pluginLog,
+        ICondition condition,
+        IDataManager dataManager)
     {
         this.pluginInterface = pluginInterface;
         this.commandManager = commandManager;
@@ -44,7 +46,7 @@ public sealed class Plugin : IDalamudPlugin
         this.configuration.Initialize(this.pluginInterface);
 
         var registry = new HuntMarkRegistry();
-        this.renderer = new HuntNameplateRenderer(this.configuration, registry, objectTable, gameGui, clientState, chatGui, framework, pluginLog);
+        this.renderer = new HuntNameplateRenderer(this.configuration, registry, objectTable, gameGui, clientState, chatGui, framework, pluginLog, condition, dataManager);
         this.configWindow = new ConfigWindow(this.configuration, this.renderer.DebugLog);
 
         foreach (var name in new[] { CommandName, "/amp", "/asmob", "/asm" })

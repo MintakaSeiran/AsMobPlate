@@ -230,7 +230,7 @@ public sealed class AnnouncedStartTimeTracker : IDisposable
         }
     }
 
-    private void Clear(string reason)
+    internal void Clear(string reason)
     {
         if (this.schedule.HasAnnouncement)
             this.debugLog.Add($"start cleared: {reason}");

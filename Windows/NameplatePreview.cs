@@ -10,7 +10,7 @@ namespace AsMobPlate.Windows;
 // This window-only state never reaches hunt detection, notifications, or native commands.
 public sealed class NameplatePreview
 {
-    private static readonly string[] Modes = ["Preview idle", "Preview countdown", "In progress", "Arrival too late"];
+    private static readonly string[] Modes = ["Preview idle", "Preview countdown", "In progress", "Arrival too late", "Defeated"];
     private readonly Configuration configuration;
     private readonly NameplatePainter painter;
     private HuntRank rank = HuntRank.A;
@@ -49,6 +49,12 @@ public sealed class NameplatePreview
         if (ImGui.RadioButton("S", this.rank == HuntRank.S))
             this.rank = HuntRank.S;
         ImGui.SameLine();
+        if (ImGui.RadioButton("SS", this.rank == HuntRank.SS))
+            this.rank = HuntRank.SS;
+        ImGui.SameLine();
+        if (ImGui.RadioButton(this.Label("Minion"), this.rank == HuntRank.Minion))
+            this.rank = HuntRank.Minion;
+        // Keep long translated labels from squeezing the mode selector.
         ImGui.SetNextItemWidth(MathF.Max(120, ImGui.GetContentRegionAvail().X));
         if (ImGui.BeginCombo("##preview-state", this.Text(Modes[this.mode])))
         {
@@ -96,10 +102,11 @@ public sealed class NameplatePreview
                 : UiText.Format("Start countdown", this.configuration.Language, "13:19", displaySeconds);
         }
 
-        var data = new NameplateData(this.rank, this.Text("Preview hunt name"), 118, this.hpPercent / 100,
+        var data = new NameplateData(this.rank, this.Text("Preview hunt name"), 118, this.mode == 4 ? 0 : this.hpPercent / 100,
             this.mode == 3 ? 850 : 23, this.mode == 3 ? TimeSpan.FromSeconds(35) : this.hpPercent < 100 ? TimeSpan.FromSeconds(75) : null,
-            this.mode == 3 ? string.Empty : startText, inProgress, this.mode == 2 ? 0 : remaining, duration,
-            this.mode == 3 ? 48 : null);
+            this.mode == 4 ? UiText.Format("Defeated elapsed", this.configuration.Language, 6) : this.mode == 3 ? string.Empty : startText,
+            inProgress, this.mode is 2 or 4 ? 0 : remaining, duration,
+            this.mode == 3 ? 48 : null, this.mode == 4);
         var size = this.painter.Measure(data);
         var margin = 16 + 12 * MathF.Max(0.25f, this.configuration.Scale);
         var maxCanvasHeight = Math.Clamp(ImGui.GetContentRegionAvail().Y - 120, 80, 260);
@@ -107,7 +114,9 @@ public sealed class NameplatePreview
         if (ImGui.BeginChild("preview-canvas", new Vector2(0, canvasHeight), true, ImGuiWindowFlags.HorizontalScrollbar))
         {
             if ((this.rank == HuntRank.A && !this.configuration.ShowARank) ||
-                (this.rank == HuntRank.S && !this.configuration.ShowSRank))
+                (this.rank == HuntRank.S && !this.configuration.ShowSRank) ||
+                (this.rank == HuntRank.SS && !this.configuration.ShowSsBoss) ||
+                (this.rank == HuntRank.Minion && !this.configuration.ShowSsMinions))
             {
                 ImGui.TextWrapped(this.Text("Preview rank hidden"));
             }

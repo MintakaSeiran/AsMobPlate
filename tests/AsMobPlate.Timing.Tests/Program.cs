@@ -243,6 +243,7 @@ Run("Preview honors configured countdown duration and invalid elapsed time", () 
     Near(10, PreviewAnimation.RemainingSeconds(-1, 10));
 });
 
+HuntProgressTests.Run(Run);
 Console.WriteLine($"{passed} passed, {failed} failed");
 return failed == 0 ? 0 : 1;
 

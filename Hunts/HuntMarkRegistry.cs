@@ -4,6 +4,21 @@ namespace AsMobPlate.Hunts;
 
 public sealed class HuntMarkRegistry
 {
+    // BNpcNameID values verified in ACT object-add records (2026-09-24/26).
+    public static readonly HashSet<uint> MinionNameIds = new() { 0x22D4, 0x2978, 0x345F };
+    public static readonly HashSet<uint> SsNameIds = new() { 0x22D3, 0x2977, 0x345E };
+
+    public static bool IsSsTerritory(uint territory) => territory is >= 813 and <= 818
+        or >= 956 and <= 961 or >= 1187 and <= 1192;
+
+    public static uint SsNameId(uint territory) => territory switch
+    {
+        >= 813 and <= 818 => 0x22D3,
+        >= 956 and <= 961 => 0x2977,
+        >= 1187 and <= 1192 => 0x345E,
+        _ => 0,
+    };
+
     public static readonly HashSet<uint> ARankNameIds = new()
     {
         2936, 2937, 2938, 2939, 2940, 2941, 2942, 2943, 2944, 2945, 2946, 2947, 2948, 2949, 2950, 2951,
@@ -24,6 +39,10 @@ public sealed class HuntMarkRegistry
 
     public HuntRank GetRank(uint nameId)
     {
+        if (MinionNameIds.Contains(nameId))
+            return HuntRank.Minion;
+        if (SsNameIds.Contains(nameId))
+            return HuntRank.SS;
         if (ARankNameIds.Contains(nameId))
             return HuntRank.A;
 

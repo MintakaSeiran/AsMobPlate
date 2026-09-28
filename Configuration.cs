@@ -17,6 +17,12 @@ public sealed class Configuration : IPluginConfiguration
 
     public bool ShowARank = true;
     public bool ShowSRank = true;
+    public bool ShowSsMinions = true;
+    public bool ShowSsBoss = true;
+    public bool ShowHuntProgress = true;
+    public bool ShowDefeated = true;
+    public float DefeatedDisplaySeconds = 30;
+    public Vector2 HuntProgressPosition = new(24, 180);
     public bool ShowHpBar = true;
     public bool ShowHpPercent = true;
     public bool ShowDistance = true;
