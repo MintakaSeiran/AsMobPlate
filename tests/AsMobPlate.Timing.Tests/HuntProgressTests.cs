@@ -5,6 +5,25 @@ internal static class HuntProgressTests
 {
     public static void Run(Action<string, Action> run)
     {
+        run("Arrival warning survives missing and improved estimates and disappearance", () =>
+        {
+            var p = new HuntProgress();
+            Observe(p, 1, HuntRank.SS, false, 10);
+            Check(!p.LatchArrivalWarning(1, 0x2977, null, null));
+            Check(!p.LatchArrivalWarning(1, 0x2977, double.NaN, TimeSpan.FromSeconds(35)));
+            Check(p.LatchArrivalWarning(1, 0x2977, 48, TimeSpan.FromSeconds(35)));
+            Check(p.LatchArrivalWarning(1, 0x2977, null, null));
+            Check(p.LatchArrivalWarning(1, 0x2977, 5, TimeSpan.FromSeconds(100)));
+            p.Prune(2000, 30);
+            Check(p.LatchArrivalWarning(1, 0x2977, null, null));
+            Check(!p.LatchArrivalWarning(2, 0x2977, null, null));
+            Check(!p.LatchArrivalWarning(1, 0x345E, null, null));
+            Observe(p, 1, HuntRank.SS, true, 2001);
+            Check(!p.LatchArrivalWarning(1, 0x2977, 48, TimeSpan.FromSeconds(35)));
+            p.Clear();
+            Observe(p, 1, HuntRank.SS, false, 2002);
+            Check(!p.LatchArrivalWarning(1, 0x2977, null, null));
+        });
         run("Verified hunt IDs exclude regular B ranks", () =>
         {
             var registry = new HuntMarkRegistry();

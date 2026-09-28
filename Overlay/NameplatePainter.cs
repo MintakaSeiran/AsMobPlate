@@ -41,8 +41,9 @@ public sealed class NameplatePainter
         var infoText = data.IsDefeated
             ? (this.configuration.ShowDistance ? $"{data.Distance:0}y" : string.Empty)
             : BuildInfoText(data.Distance, data.TimeToKill);
-        var tooLate = this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double arrival
-            && data.TimeToKill is TimeSpan ttk && arrival > ttk.TotalSeconds;
+        var tooLate = !data.IsDefeated && this.configuration.ShowArrivalWarning
+            && (data.ArrivalWarning || (data.ArrivalSeconds is double arrival
+                && data.TimeToKill is TimeSpan ttk && arrival > ttk.TotalSeconds));
         if (this.configuration.ShowArrivalWarning && data.ArrivalSeconds is double seconds)
             infoText += $"\n{UiText.Get("Arrival", this.configuration.Language)} {seconds:0}s";
         if (tooLate)
@@ -268,4 +269,5 @@ public readonly record struct NameplateData(
     double RemainingSeconds,
     int CountdownWindowSeconds,
     double? ArrivalSeconds = null,
-    bool IsDefeated = false);
+    bool IsDefeated = false,
+    bool ArrivalWarning = false);

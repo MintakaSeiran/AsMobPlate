@@ -133,6 +133,9 @@ public sealed class HuntNameplateRenderer : IDisposable
         if (!this.gameGui.WorldToScreen(worldPosition, out var screenPosition))
             return;
 
+        var arrivalWarning = this.configuration.ShowArrivalWarning
+            && this.progressTracker.Progress.LatchArrivalWarning(npc.GameObjectId, npc.NameId, arrival, timeToKill);
+
         var hasStart = this.announcedStartTimeTracker.TryGetDisplayText(out var startText, out var inProgress, out var remaining);
         if (rank == HuntRank.Minion)
         {
@@ -142,7 +145,8 @@ public sealed class HuntNameplateRenderer : IDisposable
         }
         var data = new NameplateData(rank, npc.Name.ToString(), npc.ObjectIndex,
             (float)npc.CurrentHp / npc.MaxHp, distance, timeToKill,
-            hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival);
+            hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival,
+            ArrivalWarning: arrivalWarning);
         this.painter.Draw(ImGui.GetForegroundDrawList(), screenPosition, data);
     }
 }

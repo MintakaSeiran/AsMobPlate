@@ -6,7 +6,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.018` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.019` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
@@ -63,7 +63,7 @@ For A/S hunts in combat at least 200 yalms away, the overlay estimates arrival f
 
 When estimated arrival exceeds the HP-based remaining kill time, a 4-pixel (scaled) outer frame shows alternating red/yellow diagonal stripes, both at 50% opacity by default. The interior background smoothly pulses between near-black and dark red over a two-second cycle at 88% opacity to preserve text readability. Stripes never cover the content area. The warning overrides the normal and in-progress backgrounds, but preserves text, HP bars and countdown frames. Display settings can disable the warning; Appearance settings edit both frame stripe colors and alpha. Select "Likely too late" in Preview to inspect it.
 
-Stopping, moving away, insufficient movement samples, teleports and missing kill estimates suppress the warning. Terrain, detours, changing speed and damage rate can make predictions inaccurate. This feature only reads game state and draws an overlay; it does not change targets, mounts or other plugins.
+From version 1.0.019, once a live plate shows **Likely too late**, its warning label, striped frame and pulsing background remain latched for that individual hunt. Stopping, approaching within 200 yalms, improved estimates, missing samples and temporary disappearance do not clear the warning. Distance and available estimates still update; unavailable estimates are not frozen or invented. Confirmed death replaces the warning with the defeated state. Loading, logout, territory/world/instance changes or plugin reload clear retained identities. The warning setting can hide the display without erasing its latch. Before the first warning, insufficient samples or missing kill estimates still prevent a prediction. Terrain, detours, changing speed and damage rate can make predictions inaccurate. This feature only reads game state and draws an overlay; it does not change targets, mounts or other plugins.
 
 ## Slash Commands
 
@@ -242,6 +242,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.018` to `1.0.18.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.019` to `1.0.19.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

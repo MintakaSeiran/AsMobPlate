@@ -55,11 +55,13 @@ unsafe
         foreach (var late in new[] { false, true })
         foreach (var rank in new[] { HuntRank.S, HuntRank.Minion, HuntRank.SS })
         foreach (var defeated in new[] { false, true })
+        foreach (var latched in new[] { false, true })
         {
             var configuration = new Configuration { Language = language, Scale = scale, CountdownFrameThickness = 10 };
             var painter = new NameplatePainter(configuration);
             var data = new NameplateData(rank, UiText.Get("Preview hunt name", language), 118, defeated ? 0 : hp, 23,
-                TimeSpan.FromSeconds(75), UiText.Format("Start countdown", language, "13:19", 6), inProgress, 6, 10, late ? 100 : null, defeated);
+                TimeSpan.FromSeconds(75), UiText.Format("Start countdown", language, "13:19", 6), inProgress, 6, 10,
+                latched ? null : late ? 100 : null, defeated, latched);
             ImGui.NewFrame();
             ImGui.SetNextWindowPos(Vector2.Zero);
             ImGui.SetNextWindowSize(io.DisplaySize);
@@ -74,7 +76,7 @@ unsafe
             var drawnSize = painter.Draw(list, new Vector2(900, 600), data);
             if (size != drawnSize || list.VtxBuffer.Size <= beforeMeasure)
                 throw new Exception("Measured and drawn plate mismatch or blank output.");
-            if (late)
+            if (late || latched)
             {
                 var red = ImGui.ColorConvertFloat4ToU32(configuration.ArrivalWarningRed);
                 var yellow = ImGui.ColorConvertFloat4ToU32(configuration.ArrivalWarningYellow);

@@ -20,6 +20,7 @@ public sealed class HuntProgress
         public float Radius;
         public double LastSeen;
         public double? DiedAt;
+        public bool ArrivalWarning;
     }
 
     private readonly Dictionary<ulong, Observation> observations = new();
@@ -58,6 +59,18 @@ public sealed class HuntProgress
     }
 
     public Observation? Find(ulong id) => this.observations.GetValueOrDefault(id);
+
+    public bool LatchArrivalWarning(ulong id, uint nameId, double? arrival, TimeSpan? timeToKill)
+    {
+        var item = this.Find(id);
+        if (item == null || item.NameId != nameId || item.DiedAt != null)
+            return false;
+        if (arrival is double seconds && double.IsFinite(seconds) && seconds >= 0
+            && timeToKill is TimeSpan remaining && remaining.TotalSeconds > 0
+            && seconds > remaining.TotalSeconds)
+            item.ArrivalWarning = true;
+        return item.ArrivalWarning;
+    }
 
     public void Observe(ulong id, uint nameId, uint index, string name, HuntRank rank,
         Vector3 position, float radius, bool dead, bool fighting, bool eventEligible, double now)
@@ -109,13 +122,18 @@ public sealed class HuntProgress
     {
         this.expired.Clear();
         foreach (var (id, item) in this.observations)
-            if (now - item.LastSeen > Math.Max(30, deadDuration))
+            if (now - item.LastSeen > Math.Max(30, deadDuration)
+                && (!item.ArrivalWarning || item.DiedAt != null))
                 this.expired.Add(id);
         foreach (var id in this.expired)
             this.observations.Remove(id);
         // No failure inference: an abandoned observation session simply expires.
         if (this.Stage != HuntStage.None && now - this.LastActivity > 1800)
-            this.Clear();
+        {
+            this.Stage = HuntStage.None;
+            this.StartedAt = null;
+            this.defeatedMinions.Clear();
+        }
     }
 
     private void SetStage(HuntStage stage, double now)
