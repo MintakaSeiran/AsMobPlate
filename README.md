@@ -2,6 +2,18 @@
 
 A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Display overhead HP plates, receive detection alerts, and track announced Eorzea Time starts without targeting a hunt.
 
+## Install via Dalamud
+
+Add this [custom repository JSON URL](https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/pluginmaster.json) to Dalamud's **Custom Plugin Repositories**:
+
+```text
+https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/pluginmaster.json
+```
+
+Save and enable the repository, then open the plugin installer, search for **AS Mob Plate**, and install it. Future approved releases will be available through Dalamud's plugin update system. Adding the URL does not install the plugin until you select Install.
+
+Developer testers can keep using the dev-plugin installation below. Avoid enabling both installations at the same time.
+
 ## Download
 
 **[Download the compiled plugin ZIP (1.0.21.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.21.0/AsMobPlate-1.0.21.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.21.0)
@@ -249,7 +261,7 @@ Omit `-Deploy` to create the package without installing it. Supply `-DotnetPath`
 1. Implement the next revision locally and update its version once.
 2. Run automated tests, build the Release package and deploy it locally.
 3. The maintainer reloads the plugin and tests it in game. Fixes remain local until approval.
-4. After explicit approval to publish, push the versioned release branch and update `main`, then publish the exact tested ZIP and checksum on GitHub Releases.
+4. After explicit approval to publish, push the versioned release branch and update `main`, then publish the exact tested ZIP and checksum on GitHub Releases. Once the assets are available, update `pluginmaster.json` with the approved manifest version, API level, download URLs and release timestamp; keep the README links in sync. Never point this feed at an unapproved local build.
 5. Keep previous version branches and release assets available for rollback. Any published change receives a new version; do not silently replace a tested release's ZIP. Untested builds must be explicitly requested and labeled as prereleases.
 
 `main` represents the latest approved published version; unapproved work stays local. Version 1.0.21.0 was promoted from prerelease after maintainer approval, preserving the original ZIP and checksum.
