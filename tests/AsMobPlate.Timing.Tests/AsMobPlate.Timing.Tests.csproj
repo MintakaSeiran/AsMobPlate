@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../Overlay/SsSystemMessages.cs" Link="SsSystemMessages.cs" />
     <Compile Include="../../Overlay/NotificationSoundSequence.cs" Link="NotificationSoundSequence.cs" />
     <Compile Include="../../Hunts/HuntRank.cs" Link="HuntRank.cs" />
     <Compile Include="../../Hunts/HuntMarkRegistry.cs" Link="HuntMarkRegistry.cs" />

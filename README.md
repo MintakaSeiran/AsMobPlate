@@ -2,11 +2,19 @@
 
 A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Display overhead HP plates, receive detection alerts, and track announced Eorzea Time starts without targeting a hunt.
 
+## Download
+
+**[Download the compiled plugin ZIP (1.0.21.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.21.0/AsMobPlate-1.0.21.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.21.0)
+
+**Prerelease: automated checks passed; in-game validation is pending.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
+
+For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.021` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
+
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.020` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.021` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
@@ -40,7 +48,7 @@ All six IDs were verified against ACT `261` object-add records from September 24
 
 From version 1.0.020, a confirmed scouting-start system message queues **five notification sounds**, using the existing sound effect ID and repeat interval. The notification sound switch also controls this alert; disabling it cancels pending sounds. The trigger count is fixed at five, independently of the ordinary detection repeat count. Duplicate start messages within five seconds do not retrigger it. Ordinary object detections cannot interrupt this sequence. Sounds advance on framework updates even when the overlay is hidden; object detection alone, END reports, return messages and a missed start announcement do not generate this trigger alert.
 
-- Read game-localized `LogMessage` rows 9332 (minions begin scouting) and 9334 (minions return) using Dalamud's data manager. Require system LogKind 57 and an exact message match. ACT's raw `0839` includes extra flags and is not used as a Dalamud enum value. These rows are present in the [game-data extract](https://github.com/xivapi/ffxiv-datamining/blob/master/csv/ja/LogMessage.csv).
+- Recognize all four official JP/EN/DE/FR texts for `LogMessage` rows 9332 (minions begin scouting) and 9334 (minions return), independently of the game and settings UI language, as of version 1.0.021. Also read the current game's localized rows using Dalamud's data manager. Require system LogKind 57 and a full-text match after trimming boundary whitespace and normalizing the German non-breaking space. Player quotations and ordinary hunt-presence messages do not trigger this alert. ACT's raw `0839` includes extra flags and is not used as a Dalamud enum value. Texts were checked against the [game-data extracts](https://github.com/xivapi/ffxiv-datamining/tree/master/csv) for ja/en/de/fr.
 - In an eligible territory, the scouting message starts the event without requiring the player's S-rank reward. A known minion or boss can also establish an observed stage when the start message was missed.
 - Display searching, observed minion combat, boss detected, boss defeated, or minions returned. Boss confirmation requires its matching NameId for this territory group. Four observed minion deaths alone never imply that the boss has been detected.
 - Count unique observed dead minion object IDs, labeled **Observed defeats**, not **Remaining**. Remote deaths are not guaranteed to appear in the local object table. Zero HP or the object's dead state confirms death; disappearance and reward messages alone do not.
@@ -228,6 +236,26 @@ To verify timing in game:
 
 ## Build and Tests
 
+To test, build, package, back up and update the local dev-plugin installation in one step:
+
+```powershell
+pwsh -File scripts/Build-Plugin.ps1 -Deploy
+```
+
+Omit `-Deploy` to create the package without installing it. Supply `-DotnetPath` if needed. Versioned ZIPs and SHA256 checksums are written under `output/packages/`; backups remain in `output/dev-backups/`. These local artifacts are excluded from Git. Reload the dev plugin after deployment.
+
+### Release Flow
+
+1. Implement the next revision locally and update its version once.
+2. Run automated tests, build the Release package and deploy it locally.
+3. The maintainer reloads the plugin and tests it in game. Fixes remain local until approval.
+4. After explicit approval to publish, push the versioned release branch and update `main`, then publish the exact tested ZIP and checksum on GitHub Releases.
+5. Keep previous version branches and release assets available for rollback. Any published change receives a new version; do not silently replace a tested release's ZIP. Untested builds must be explicitly requested and labeled as prereleases.
+
+`main` represents the latest approved published version; unapproved work stays local. Version 1.0.21.0 is the initial downloadable prerelease requested before in-game testing.
+
+### Manual Commands
+
 Build on Windows with the .NET 10 SDK and local Dalamud development libraries:
 
 ```powershell
@@ -244,6 +272,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.020` to `1.0.20.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.021` to `1.0.21.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

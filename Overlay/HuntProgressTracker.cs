@@ -26,8 +26,7 @@ public sealed class HuntProgressTracker : IDisposable
     private readonly DebugLog log;
     private readonly Action clearStartTime;
     private readonly Action notifySsTrigger;
-    private readonly string startMessage;
-    private readonly string returnMessage;
+    private readonly SsSystemMessages systemMessages;
     private (uint Territory, uint World, uint Instance) context;
     private bool disposed;
     private bool suspended = true;
@@ -53,8 +52,7 @@ public sealed class HuntProgressTracker : IDisposable
         this.notifySsTrigger = notifySsTrigger;
         // LogMessage 9332/9334 use LogKind 57; ACT's 0839 includes source flags.
         var sheet = data.GetExcelSheet<LogMessage>();
-        this.startMessage = sheet.GetRow(9332).Text.ToString();
-        this.returnMessage = sheet.GetRow(9334).Text.ToString();
+        this.systemMessages = new SsSystemMessages(sheet.GetRow(9332).Text.ToString(), sheet.GetRow(9334).Text.ToString());
         this.framework.Update += this.Update;
         this.chat.ChatMessage += this.OnChat;
         this.client.TerritoryChanged += this.OnTerritory;
@@ -150,8 +148,9 @@ public sealed class HuntProgressTracker : IDisposable
         var kind = (int)message.LogKind;
         if (kind is not (57 or 10 or 11 or 30)) return;
         var text = message.Message.ToString().Trim();
-        var start = kind == 57 && this.startMessage.Length > 0 && text == this.startMessage;
-        var returned = kind == 57 && this.returnMessage.Length > 0 && text == this.returnMessage;
+        var systemEvent = this.systemMessages.Match(kind, text);
+        var start = systemEvent == SsSystemEvent.Start;
+        var returned = systemEvent == SsSystemEvent.Returned;
         var report = kind != 57 && (text.Equals("END", StringComparison.OrdinalIgnoreCase)
             || text.EndsWith("END", StringComparison.OrdinalIgnoreCase)
             || text.Contains("Sモブ終了", StringComparison.Ordinal)

@@ -5,6 +5,31 @@ internal static class HuntProgressTests
 {
     public static void Run(Action<string, Action> run)
     {
+        run("SS start and return messages match all four official languages", () =>
+        {
+            var messages = new AsMobPlate.Overlay.SsSystemMessages();
+            string[] starts = [
+                "特殊なリスキーモブの配下が、偵察活動を開始したようだ……",
+                "The minions of an extraordinarily powerful mark are on the hunt for prey...",
+                "Die Helfer eines besonderen Hochwilds beginnen ihre Erkundung\u00A0...",
+                "Les sous-fifres du monstre d'élite ont commencé à vous espionner...",
+            ];
+            string[] returns = [
+                "特殊なリスキーモブの配下が、偵察活動を終えて帰還したようだ……",
+                "The minions of an extraordinarily powerful mark have withdrawn...",
+                "Die Helfer eines besonderen Hochwilds haben ihre Erkundung beendet.",
+                "Les sous-fifres du monstre d'élite ont arrêté leur mission d'espionnage et ont déserté les lieux...",
+            ];
+            foreach (var message in starts)
+            {
+                Check(messages.Match(57, message + " 　") == AsMobPlate.Overlay.SsSystemEvent.Start);
+                Check(messages.Match(11, message) == AsMobPlate.Overlay.SsSystemEvent.None);
+                Check(messages.Match(57, "Report: " + message) == AsMobPlate.Overlay.SsSystemEvent.None);
+            }
+            foreach (var message in returns)
+                Check(messages.Match(57, message) == AsMobPlate.Overlay.SsSystemEvent.Returned);
+            Check(messages.Match(57, "強大なリスキーモブの気配を感じる……！") == AsMobPlate.Overlay.SsSystemEvent.None);
+        });
         run("SS trigger accepts one alert for duplicate messages", () =>
         {
             var p = new HuntProgress();
