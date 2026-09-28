@@ -6,7 +6,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 **[Download the compiled plugin ZIP (1.0.21.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.21.0/AsMobPlate-1.0.21.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.21.0)
 
-**Prerelease: automated checks passed; in-game validation is pending.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
+**Stable release: approved for publication by the maintainer.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
 
 For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.021` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
 
@@ -252,7 +252,7 @@ Omit `-Deploy` to create the package without installing it. Supply `-DotnetPath`
 4. After explicit approval to publish, push the versioned release branch and update `main`, then publish the exact tested ZIP and checksum on GitHub Releases.
 5. Keep previous version branches and release assets available for rollback. Any published change receives a new version; do not silently replace a tested release's ZIP. Untested builds must be explicitly requested and labeled as prereleases.
 
-`main` represents the latest approved published version; unapproved work stays local. Version 1.0.21.0 is the initial downloadable prerelease requested before in-game testing.
+`main` represents the latest approved published version; unapproved work stays local. Version 1.0.21.0 was promoted from prerelease after maintainer approval, preserving the original ZIP and checksum.
 
 ### Manual Commands
 
