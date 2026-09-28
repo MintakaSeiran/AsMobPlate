@@ -13,4 +13,4 @@ These rules apply to the AsMobPlate plugin, not unrelated projects in this works
 - Run `dotnet build` after a change and verify the generated manifest version matches the DLL before delivery.
 - Keep README.md headings, descriptions, and captions in English, and prefer English UI screenshots for the GitHub page. Preserve the plugin's multilingual UI support.
 - Preserve each delivered version on a separate branch named `release/<normalized assembly version>`, for example `release/1.0.18.0` for project version `1.0.018`, and push that branch when publishing is requested. Continue new revisions from the latest delivered version so changes are retained.
-- Do not push or merge release changes into `main` unless the user explicitly requests it. Keep previous version branches intact.
+- Keep `main` at the latest delivered release. When publishing a revision, update and push both its versioned release branch and `main`; separate approval to update `main` is not required. Preserve previous version branches and never force-push over unrelated remote changes.
