@@ -6,13 +6,13 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.016` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.017` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
 ## Nameplate Examples
 
 | Idle | Countdown |
 | --- | --- |
-| ![Idle A-rank nameplate with HP and distance](docs/images/nameplate-idle.png) | ![ET countdown with a shrinking outer frame](docs/images/nameplate-countdown.png) |
+| ![Idle S-rank nameplate with HP and distance](docs/images/nameplate-idle.png) | ![ET countdown with a shrinking outer frame](docs/images/nameplate-countdown.png) |
 | HP and distance without an announced start. | Announced ET start and remaining real seconds. |
 
 | In Progress | Arrival Warning |
@@ -20,7 +20,7 @@ A lightweight, standalone Dalamud plugin for FFXIV A-rank and S-rank hunts. Disp
 | ![In-progress nameplate with a dark red background](docs/images/nameplate-in-progress.png) | ![Late arrival warning with a striped outer frame](docs/images/nameplate-arrival-warning.png) |
 | In-progress label and background. | Estimated arrival exceeds the remaining kill time. |
 
-*Rendered English UI examples with sample data. The arrival warning's red/black background animation is shown as a still image.*
+*User-provided English S-rank preview captures with sample data and customized appearance settings. The arrival warning's red/black background animation is shown as a still image.*
 
 ## Arrival Warning
 
@@ -203,10 +203,10 @@ Timing tests cover clock conversion, midnight rollover, duplicate announcements,
 
 The rendering harness defaults to `%APPDATA%\XIVLauncher\addon\Hooks\dev`; use `-p:DalamudLibPath=...` for another location.
 
-For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. README illustrations are stored in `docs/images/`. The introductory settings image is a user-provided UI capture; the other images are generated without game assets. Generate UI illustrations on Windows with `dotnet run --project tests/AsMobPlate.Rendering.Tests -- --export .` from the repository root. This also replaces the introductory capture with a generated settings image. The exporter draws the implemented ImGui UI and rasterizes its geometry with the bundled default ImGui font.
+For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's developer plugin settings and keep its generated manifest and dependencies alongside it. The plugin installer uses `images/icon.png` and `images/image1.png`; these are copied beside the DLL under `images/`. README illustrations are stored in `docs/images/`. The introductory settings image and four nameplate examples are user-provided UI captures; the installer images are generated without game assets. Generate UI illustrations on Windows with `dotnet run --project tests/AsMobPlate.Rendering.Tests -- --export .` from the repository root. This also replaces the user-provided captures with generated UI images. The exporter draws the implemented ImGui UI and rasterizes its geometry with the bundled default ImGui font.
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.016` to `1.0.16.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.017` to `1.0.17.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

@@ -58,11 +58,13 @@ public sealed class Plugin : IDalamudPlugin
 
         this.pluginInterface.UiBuilder.Draw += this.Draw;
         this.pluginInterface.UiBuilder.OpenConfigUi += this.OpenConfigUi;
+        this.pluginInterface.UiBuilder.OpenMainUi += this.OpenConfigUi;
     }
 
     public void Dispose()
     {
         this.pluginInterface.UiBuilder.OpenConfigUi -= this.OpenConfigUi;
+        this.pluginInterface.UiBuilder.OpenMainUi -= this.OpenConfigUi;
         this.pluginInterface.UiBuilder.Draw -= this.Draw;
         foreach (var name in this.registeredCommands)
             this.commandManager.RemoveHandler(name);
