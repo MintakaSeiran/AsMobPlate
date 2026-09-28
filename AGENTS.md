@@ -12,5 +12,5 @@ These rules apply to the AsMobPlate plugin, not unrelated projects in this works
 - Keep `Configuration.Version` independent: it is a configuration schema migration number.
 - Run `dotnet build` after a change and verify the generated manifest version matches the DLL before delivery.
 - Keep README.md headings, descriptions, and captions in English, and prefer English UI screenshots for the GitHub page. Preserve the plugin's multilingual UI support.
-- Preserve each delivered version on a separate branch named `codex/v1.0.NNN` and push that branch when publishing is requested. Continue new revisions from the latest delivered version so changes are retained.
+- Preserve each delivered version on a separate branch named `release/<normalized assembly version>`, for example `release/1.0.18.0` for project version `1.0.018`, and push that branch when publishing is requested. Continue new revisions from the latest delivered version so changes are retained.
 - Do not push or merge release changes into `main` unless the user explicitly requests it. Keep previous version branches intact.
