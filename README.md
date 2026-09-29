@@ -16,17 +16,23 @@ Developer testers can keep using the dev-plugin installation below. Avoid enabli
 
 ## Download
 
-**[Download the compiled plugin ZIP (1.0.21.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.21.0/AsMobPlate-1.0.21.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.21.0)
+**[Download the compiled plugin ZIP (1.0.22.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.22.0/AsMobPlate-1.0.22.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.22.0)
 
 **Stable release: approved for publication by the maintainer.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
 
-For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.021` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
+For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.022` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.021` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.022` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+
+### Combat Start and Elapsed Time (1.0.022)
+
+Living hunts with HP at or below 99.99% display **In progress**, independently of announced ET. An elapsed announcement no longer displays `in 0s` or establishes combat on its own. Actual combat hides the announced-start line even if its target ET is in the future.
+
+If full HP was observed continuously before the first sample at or below 99.99%, the label includes elapsed time from that sample, for example `In progress 01:15`. First detection at reduced HP, or a gap over one second before the threshold crossing, omits the timer. The timer never substitutes the announced ET for the actual pull time. A full-HP, out-of-combat reset clears the timer; territory/world/instance changes and logout clear observations. The existing in-progress label setting applies in all four UI languages.
 
 ## Nameplate Examples
 
@@ -211,7 +217,7 @@ ET 13:13 -> 13:19  in 18s
 - Remaining real seconds are `(targetEtSeconds - currentEtSeconds) * 7 / 144`. One ET minute is `35 / 12`, approximately 2.916667 real seconds; one ET hour is 175 real seconds.
 - `ET1319` means `13:19:00`. Receipt at `13:13:00` leaves 17.5 real seconds; receipt at `13:13:30` leaves approximately 16.042 seconds. Displayed whole seconds round upward.
 - The nearest occurrence across midnight is selected. The default announcement window is plus or minus 120 ET minutes; announcements outside it are logged and ignored instead of creating a next-day wait.
-- Once the target passes, the plate switches to the in-progress label and background. `Start time display after pull` controls how long it remains visible.
+- Once the target passes, its countdown line is hidden. Actual HP loss, rather than the scheduled time, controls the in-progress label and background. `Start time display after pull` still bounds retention of the announcement internally.
 - Repeated announcements for the same target retain the original receipt ET and countdown state. A different valid target replaces the schedule.
 - Time is refreshed on `IFramework.Update`, independently of drawing or camera visibility. Logout, territory changes, unavailable game time, or a game clock override clear the schedule. There is no PC-clock fallback.
 - Chat normally captures ET immediately on the game thread. Off-thread messages are deferred to the next game update and logged with `deferred=True`.
@@ -284,6 +290,6 @@ For local dev-plugin loading, select the built `AsMobPlate.dll` in Dalamud's dev
 
 ## Versioning and References
 
-`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.021` to `1.0.21.0`. `Configuration.Version` is an independent migration number.
+`AsMobPlate.csproj` is the authoritative release version. Delivered revisions increment the zero-padded patch number once. .NET and Dalamud may normalize `1.0.022` to `1.0.22.0`. `Configuration.Version` is an independent migration number.
 
 API references: [ClientTime](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/System/Timer/ClientTime.cs), [UIModule](https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/UI/UIModule.cs), and [Dalamud CommandManager](https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Command/CommandManager.cs).

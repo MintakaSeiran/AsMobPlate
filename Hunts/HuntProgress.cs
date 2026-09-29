@@ -21,6 +21,7 @@ public sealed class HuntProgress
         public double LastSeen;
         public double? DiedAt;
         public bool ArrivalWarning;
+        public HuntCombatClock Combat { get; } = new();
     }
 
     private readonly Dictionary<ulong, Observation> observations = new();

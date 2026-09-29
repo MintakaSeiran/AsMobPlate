@@ -61,7 +61,7 @@ unsafe
             var painter = new NameplatePainter(configuration);
             var data = new NameplateData(rank, UiText.Get("Preview hunt name", language), 118, defeated ? 0 : hp, 23,
                 TimeSpan.FromSeconds(75), UiText.Format("Start countdown", language, "13:19", 6), inProgress, 6, 10,
-                latched ? null : late ? 100 : null, defeated, latched);
+                latched ? null : late ? 100 : null, defeated, latched, inProgress ? 75 : null);
             ImGui.NewFrame();
             ImGui.SetNextWindowPos(Vector2.Zero);
             ImGui.SetNextWindowSize(io.DisplaySize);

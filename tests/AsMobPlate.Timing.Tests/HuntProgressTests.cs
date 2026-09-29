@@ -5,6 +5,33 @@ internal static class HuntProgressTests
 {
     public static void Run(Action<string, Action> run)
     {
+        run("HP threshold and observed combat start", () =>
+        {
+            Check(!HuntCombatClock.IsDamaged(99991, 100000));
+            Check(HuntCombatClock.IsDamaged(99990, 100000));
+            Check(!HuntCombatClock.IsDamaged(uint.MaxValue, uint.MaxValue));
+            var c = new HuntCombatClock();
+            c.Update(100000, 100000, false, 10);
+            c.Update(99999, 100000, true, 10.1);
+            c.Update(99990, 100000, true, 10.2);
+            Check(c.InProgress && c.StartedAt == 10.2);
+            c.Update(50000, 100000, true, 20);
+            Check(c.StartedAt == 10.2);
+            c.Update(100000, 100000, false, 21);
+            Check(!c.InProgress && c.StartedAt == null);
+        });
+        run("Already damaged hunts and missed starts omit elapsed time", () =>
+        {
+            var c = new HuntCombatClock();
+            c.Update(500, 1000, true, 10);
+            Check(c.InProgress && c.StartedAt == null);
+            c.Update(400, 1000, true, 11);
+            Check(c.StartedAt == null);
+            c = new HuntCombatClock();
+            c.Update(1000, 1000, false, 10);
+            c.Update(400, 1000, true, 20);
+            Check(c.InProgress && c.StartedAt == null);
+        });
         run("SS start and return messages match all four official languages", () =>
         {
             var messages = new AsMobPlate.Overlay.SsSystemMessages();

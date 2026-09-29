@@ -92,9 +92,9 @@ public sealed class NameplatePreview
         }
         ImGui.EndDisabled();
 
-        var inProgress = this.configuration.ShowAnnouncedStartTime && (this.mode == 2 || (this.mode == 1 && remaining <= 0));
+        var inProgress = this.mode == 2 || (this.mode == 1 && remaining <= 0);
         var startText = string.Empty;
-        if (this.mode != 0 && this.configuration.ShowAnnouncedStartTime)
+        if (this.mode != 0 && this.configuration.ShowAnnouncedStartTime && !inProgress)
         {
             var displaySeconds = this.mode == 2 ? 0 : Math.Max(0, (int)Math.Ceiling(remaining));
             startText = this.configuration.ShowEtAtAnnouncement
@@ -106,7 +106,7 @@ public sealed class NameplatePreview
             this.mode == 3 ? 850 : 23, this.mode == 3 ? TimeSpan.FromSeconds(35) : this.hpPercent < 100 ? TimeSpan.FromSeconds(75) : null,
             this.mode == 4 ? UiText.Format("Defeated elapsed", this.configuration.Language, 6) : this.mode == 3 ? string.Empty : startText,
             inProgress, this.mode is 2 or 4 ? 0 : remaining, duration,
-            this.mode == 3 ? 48 : null, this.mode == 4);
+            this.mode == 3 ? 48 : null, this.mode == 4, CombatElapsedSeconds: inProgress ? 75 : null);
         var size = this.painter.Measure(data);
         var margin = 16 + 12 * MathF.Max(0.25f, this.configuration.Scale);
         var maxCanvasHeight = Math.Clamp(ImGui.GetContentRegionAvail().Y - 120, 80, 260);

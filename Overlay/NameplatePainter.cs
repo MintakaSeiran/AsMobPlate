@@ -53,6 +53,11 @@ public sealed class NameplatePainter
         var startRemainingSeconds = data.RemainingSeconds;
         var inProgressText = data.IsDefeated ? UiText.Get("Defeated", this.configuration.Language)
             : isInProgress && this.configuration.ShowInProgressLabel ? UiText.Get("In progress", this.configuration.Language) : string.Empty;
+        if (!data.IsDefeated && inProgressText.Length > 0 && data.CombatElapsedSeconds is double elapsed)
+        {
+            var totalSeconds = (long)Math.Max(0, elapsed);
+            inProgressText += $" {totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        }
         var infoSize = ImGui.CalcTextSize(infoText);
         var startSize = ImGui.CalcTextSize(startText);
         var inProgressSize = ImGui.CalcTextSize(inProgressText);
@@ -270,4 +275,5 @@ public readonly record struct NameplateData(
     int CountdownWindowSeconds,
     double? ArrivalSeconds = null,
     bool IsDefeated = false,
-    bool ArrivalWarning = false);
+    bool ArrivalWarning = false,
+    double? CombatElapsedSeconds = null);

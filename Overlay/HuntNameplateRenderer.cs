@@ -136,17 +136,22 @@ public sealed class HuntNameplateRenderer : IDisposable
         var arrivalWarning = this.configuration.ShowArrivalWarning
             && this.progressTracker.Progress.LatchArrivalWarning(npc.GameObjectId, npc.NameId, arrival, timeToKill);
 
-        var hasStart = this.announcedStartTimeTracker.TryGetDisplayText(out var startText, out var inProgress, out var remaining);
+        var hasStart = this.announcedStartTimeTracker.TryGetDisplayText(out var startText, out _, out var remaining);
+        var combat = this.progressTracker.Progress.Find(npc.GameObjectId)?.Combat;
+        var inProgress = HuntCombatClock.IsDamaged(npc.CurrentHp, npc.MaxHp) || combat?.InProgress == true;
+        var elapsed = inProgress && combat?.StartedAt is double started
+            ? Math.Max(0, HuntProgressTracker.Now - started) : (double?)null;
+        // An announced deadline is not proof of a pull; actual HP loss is.
+        if (inProgress || remaining <= 0) hasStart = false;
         if (rank == HuntRank.Minion)
         {
             hasStart = false;
-            inProgress = (npc.StatusFlags & StatusFlags.InCombat) != 0;
             remaining = 0;
         }
         var data = new NameplateData(rank, npc.Name.ToString(), npc.ObjectIndex,
             (float)npc.CurrentHp / npc.MaxHp, distance, timeToKill,
             hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival,
-            ArrivalWarning: arrivalWarning);
+            ArrivalWarning: arrivalWarning, CombatElapsedSeconds: elapsed);
         this.painter.Draw(ImGui.GetForegroundDrawList(), screenPosition, data);
     }
 }

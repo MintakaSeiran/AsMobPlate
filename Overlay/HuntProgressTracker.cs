@@ -130,6 +130,9 @@ public sealed class HuntProgressTracker : IDisposable
                     previous?.Name ?? npc.Name.ToString(), rank, npc.Position, npc.HitboxRadius,
                     dead, (npc.StatusFlags & StatusFlags.InCombat) != 0,
                     bossId != 0 && (npc.NameId == bossId || npc.NameId == bossId + 1), now);
+                if (!dead)
+                    this.Progress.Find(id)?.Combat.Update(npc.CurrentHp, npc.MaxHp,
+                        (npc.StatusFlags & StatusFlags.InCombat) != 0, now);
             }
             this.Progress.Prune(now, this.DeadDuration);
             if (before != this.Progress.Stage)
