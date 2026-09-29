@@ -128,6 +128,7 @@ public sealed class ConfigWindow
     {
         var changed = this.Checkbox("Play FFXIV sound on detection", ref this.configuration.EnableNotificationSound);
         changed |= this.Checkbox("Place map flag on detection", ref this.configuration.EnableMapFlagOnDetection);
+        changed |= this.Checkbox("Create Party Finder from plate", ref this.configuration.EnablePartyFinderOnRightClick);
         changed |= this.Checkbox("Print chat notification", ref this.configuration.EnableChatNotification);
         changed |= this.SliderFloat("A rank notification distance", ref this.configuration.ARankNotificationDistance, 20, 1000, this.Text("Distance unit"));
         changed |= this.SliderFloat("S rank notification distance", ref this.configuration.SRankNotificationDistance, 20, 2000, this.Text("Distance unit"));

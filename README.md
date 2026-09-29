@@ -16,17 +16,25 @@ Developer testers can keep using the dev-plugin installation below. Avoid enabli
 
 ## Download
 
-**[Download the compiled plugin ZIP (1.0.22.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.22.0/AsMobPlate-1.0.22.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.22.0)
+**[Download the compiled plugin ZIP (1.0.24.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.24.0/AsMobPlate-1.0.24.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.24.0)
 
 **Stable release: approved for publication by the maintainer.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
 
-For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.022` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
+For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.024` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.022` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.024` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+
+### Party Finder Helper (1.0.024)
+
+Right-click anywhere inside a live A/S/SS hunt nameplate to open the game's **Party Recruit Editor** directly. The helper prepares a normal eight-player, world-only Hunt recruitment: public listing, all four participation languages, no item-level requirement or job-duplication restriction, and tank/healer jobs for empty slots. Existing party members retain their occupied slots. The final **Recruit Members** button is pressed by the user.
+
+Version 1.0.024 removes the context menu and plugin confirmation popup. Setup waits for the native finder and editor to initialize before filling the controls. It stops after filling the editor; subsequent manual edits are not overwritten. Existing recruitment drafts and active listings are preserved. Failures time out after ten seconds and produce a localized chat message; setup stages are included in the plugin's exportable debug log.
+
+The public comment follows the selected AS Mob Plate UI language and contains the hunt rank/name, area and map coordinates, without role text. If an announced ET start is active in the current territory, it is appended. Long names are shortened within the native UTF-8 buffer limit while preserving the start ET. Review the prepared settings in the native editor before registering the recruitment.
 
 ### Combat Start and Elapsed Time (1.0.022)
 

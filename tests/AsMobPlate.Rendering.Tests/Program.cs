@@ -8,6 +8,7 @@ using Dalamud.Bindings.ImGui;
 
 unsafe
 {
+    RecruitmentTests.Run();
     var estimator = new ArrivalEstimator();
     var target = new Vector3(850, 0, 0);
     if (estimator.Estimate(Vector3.Zero, target, 25, 3) != null)

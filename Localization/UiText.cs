@@ -69,6 +69,7 @@ public static class UiText
         ["Time to kill sample window"] = ["Time to kill sample window", "討伐予測の計測期間", "Messzeitraum für die Restkampfzeit", "Période de mesure du temps de combat"],
         ["Play FFXIV sound on detection"] = ["Play FFXIV sound on detection", "検出時にFFXIVの効果音を再生", "FFXIV-Sound bei Erkennung abspielen", "Jouer un son FFXIV à la détection"],
         ["Place map flag on detection"] = ["Place map flag on detection", "検出時にマップへ旗を設置", "Bei Erkennung Kartenflagge setzen", "Placer un drapeau à la détection"],
+        ["Create Party Finder from plate"] = ["Create Party Finder from right-clicked plate", "プレート右クリックでパーティ募集を作成", "Partyfinder per Rechtsklick auf Platte erstellen", "Créer une recherche d'équipe par clic droit"],
         ["Sound Effect Id"] = ["Sound effect ID", "効果音ID", "Soundeffekt-ID", "ID de l'effet sonore"],
         ["Sound Repeat Count"] = ["Sound repeat count", "効果音の再生回数", "Soundwiederholungen", "Nombre de répétitions du son"],
         ["Sound Repeat Interval"] = ["Sound repeat interval", "効果音の再生間隔", "Abstand der Soundwiederholungen", "Intervalle entre les sons"],
@@ -119,6 +120,17 @@ public static class UiText
         ["Announcement countdown"] = ["ET {0} -> {1}  in {2}s", "ET {0} -> {1}  あと{2}秒", "ET {0} -> {1}  in {2}s", "ET {0} -> {1}  dans {2}s"],
         ["Start countdown"] = ["Start ET {0}  in {1}s", "開始ET {0}  あと{1}秒", "Start ET {0}  in {1}s", "Départ ET {0}  dans {1}s"],
         ["Hunt detected"] = ["[{0}] {1} is in detection range.", "[{0}] {1}が通知範囲内に入りました。", "[{0}] {1} ist in Reichweite.", "[{0}] {1} est à portée de détection."],
+        ["Party finder menu"] = ["Party Finder", "パーティ募集", "Partyfinder", "Recherche d'équipe"],
+        ["Create hunt recruitment"] = ["Create hunt recruitment", "モブハント募集を作成", "Jagdgruppe erstellen", "Créer une annonce de chasse"],
+        ["Recruitment preview"] = ["Recruitment preview", "募集内容の確認", "Vorschau der Gruppensuche", "Aperçu de l'annonce"],
+        ["Apply recruitment"] = ["Open recruitment settings", "ゲームの募集設定を開く", "Rekrutierungseinstellungen öffnen", "Ouvrir les paramètres de recrutement"],
+        ["Recruitment start"] = ["Start", "開始", "Start", "Début"],
+        ["Recruitment already open"] = ["Close the current recruitment editor, then right-click the hunt plate again.", "開いている募集編集画面を閉じてから、プレートをもう一度右クリックしてください。", "Schließe den offenen Rekrutierungseditor und klicke erneut mit rechts auf die Jagdplatte.", "Fermez l'éditeur de recrutement, puis faites à nouveau un clic droit sur la plaque."],
+        ["Recruitment already active"] = ["You already have an active recruitment listing.", "すでにパーティ募集中です。", "Du hast bereits eine aktive Gruppensuche.", "Une annonce de recrutement est déjà active."],
+        ["Recruitment failed"] = ["Could not open recruitment settings. Please try again.", "募集設定を開けませんでした。もう一度お試しください。", "Rekrutierungseinstellungen konnten nicht geöffnet werden. Bitte erneut versuchen.", "Impossible d'ouvrir les paramètres de recrutement. Veuillez réessayer."],
+        ["Cancel"] = ["Cancel", "キャンセル", "Abbrechen", "Annuler"],
+        ["Recruitment copied"] = ["Recruitment comment copied to clipboard.", "募集文をクリップボードにコピーしました。", "Kommentar in die Zwischenablage kopiert.", "Commentaire copié dans le presse-papiers."],
+        ["Recruitment native note"] = ["The Party Finder window was opened. Check role restrictions before recruiting.", "パーティ募集ウィンドウを開きました。募集開始前にロール制限を確認してください。", "Das Partyfinder-Fenster wurde geöffnet. Bitte Rollenbeschränkungen vor dem Rekrutieren prüfen.", "La fenêtre de recherche d'équipe est ouverte. Vérifiez les restrictions de rôle avant de recruter."],
     };
 
     static UiText()

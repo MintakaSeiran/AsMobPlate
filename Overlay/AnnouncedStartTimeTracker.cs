@@ -71,6 +71,17 @@ public sealed class AnnouncedStartTimeTracker : IDisposable
         return true;
     }
 
+    public bool TryGetRecruitmentStartEt(out string startEt)
+    {
+        startEt = string.Empty;
+        if (!this.configuration.ShowAnnouncedStartTime || !this.schedule.HasAnnouncement || this.currentEt <= 0
+            || this.announcementTerritory != this.clientState.TerritoryType)
+            return false;
+
+        startEt = this.startEtText;
+        return startEt.Length > 0;
+    }
+
     private void OnChatMessage(IChatMessage message)
     {
         var text = message.Message.ToString();

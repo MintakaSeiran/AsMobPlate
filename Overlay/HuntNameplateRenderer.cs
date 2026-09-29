@@ -6,6 +6,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using AsMobPlate.Hunts;
+using AsMobPlate.Localization;
 
 namespace AsMobPlate.Overlay;
 
@@ -16,10 +17,13 @@ public sealed class HuntNameplateRenderer : IDisposable
     private readonly HuntMarkRegistry registry;
     private readonly IObjectTable objectTable;
     private readonly IGameGui gameGui;
+    private readonly IClientState clientState;
+    private readonly IDataManager dataManager;
     private readonly IPluginLog pluginLog;
     private readonly HuntNotifier notifier;
     private readonly HuntMapFlagger mapFlagger;
     private readonly AnnouncedStartTimeTracker announcedStartTimeTracker;
+    private readonly PartyFinderRecruitment partyFinderRecruitment;
     private readonly HpTracker hpTracker = new();
     private readonly ArrivalEstimator arrivalEstimator = new();
     private readonly HuntProgressTracker progressTracker;
@@ -43,10 +47,14 @@ public sealed class HuntNameplateRenderer : IDisposable
         this.registry = registry;
         this.objectTable = objectTable;
         this.gameGui = gameGui;
+        this.clientState = clientState;
+        this.dataManager = dataManager;
         this.pluginLog = pluginLog;
         this.notifier = new HuntNotifier(configuration, chatGui, pluginLog, framework);
         this.mapFlagger = new HuntMapFlagger(configuration, gameGui, clientState, pluginLog);
         this.announcedStartTimeTracker = new AnnouncedStartTimeTracker(configuration, chatGui, framework, clientState, pluginLog, this.DebugLog);
+        this.partyFinderRecruitment = new PartyFinderRecruitment(configuration, clientState, chatGui, pluginLog,
+            gameGui, framework, objectTable, this.DebugLog);
         this.progressTracker = new HuntProgressTracker(configuration, clientState, objectTable, framework,
             chatGui, condition, dataManager, registry, this.DebugLog,
             () => this.announcedStartTimeTracker.Clear("hunt context or SS event changed"), this.notifier.NotifySsTrigger);
@@ -122,6 +130,7 @@ public sealed class HuntNameplateRenderer : IDisposable
 
     public void Dispose()
     {
+        this.partyFinderRecruitment.Dispose();
         this.progressTracker.Dispose();
         this.announcedStartTimeTracker.Dispose();
         this.notifier.Dispose();
@@ -152,6 +161,50 @@ public sealed class HuntNameplateRenderer : IDisposable
             (float)npc.CurrentHp / npc.MaxHp, distance, timeToKill,
             hasStart ? startText : string.Empty, inProgress, remaining, this.announcedStartTimeTracker.CountdownWindowSeconds, arrival,
             ArrivalWarning: arrivalWarning, CombatElapsedSeconds: elapsed);
-        this.painter.Draw(ImGui.GetForegroundDrawList(), screenPosition, data);
+        var size = this.painter.Draw(ImGui.GetForegroundDrawList(), screenPosition, data);
+        this.HandleRightClick(npc, rank, screenPosition, size);
+    }
+
+    private void HandleRightClick(IBattleNpc npc, HuntRank rank, Vector2 screenPosition, Vector2 size)
+    {
+        if (!this.configuration.EnablePartyFinderOnRightClick || rank == HuntRank.Minion)
+            return;
+
+        var topLeft = screenPosition - new Vector2(size.X * 0.5f, size.Y);
+        ImGui.SetNextWindowPos(topLeft);
+        ImGui.SetNextWindowSize(size);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0);
+        ImGui.PushStyleColor(ImGuiCol.WindowBg, Vector4.Zero);
+        var flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoSavedSettings
+            | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoFocusOnAppearing;
+        if (ImGui.Begin($"##ASMobPlateHit{npc.GameObjectId:X}{npc.ObjectIndex}", flags))
+        {
+            ImGui.InvisibleButton("hit", size, ImGuiButtonFlags.MouseButtonRight);
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+            {
+                this.announcedStartTimeTracker.TryGetRecruitmentStartEt(out var startEt);
+                var coordinates = Dalamud.Utility.MapUtil.GetMapCoordinates(npc);
+                this.partyFinderRecruitment.Open(rank, npc.Name.ToString(), new Vector2(coordinates.X, coordinates.Y), this.GetAreaName(), startEt);
+            }
+        }
+        ImGui.End();
+        ImGui.PopStyleColor();
+        ImGui.PopStyleVar(2);
+    }
+
+    private string GetAreaName()
+    {
+        try
+        {
+            var sheet = this.dataManager.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>();
+            var territory = sheet.GetRow(this.clientState.TerritoryType);
+            var name = territory.PlaceName.Value.Name.ExtractText();
+            return string.IsNullOrWhiteSpace(name) ? $"Territory {this.clientState.TerritoryType}" : name;
+        }
+        catch
+        {
+            return $"Territory {this.clientState.TerritoryType}";
+        }
     }
 }

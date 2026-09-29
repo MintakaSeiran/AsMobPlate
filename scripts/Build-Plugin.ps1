@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $hasSdk = $false
 if (Get-Command $DotnetPath -ErrorAction SilentlyContinue) {
@@ -64,7 +65,7 @@ try {
         New-Item -ItemType Directory -Path $destination -Force | Out-Null
         Get-ChildItem -LiteralPath $staging | Copy-Item -Destination $destination -Recurse -Force
         foreach ($file in Get-ChildItem -LiteralPath $staging -File -Recurse) {
-            $relative = [IO.Path]::GetRelativePath($staging, $file.FullName)
+            $relative = $file.FullName.Substring($staging.Length).TrimStart('\', '/')
             $target = Join-Path $destination $relative
             if ((Get-FileHash -LiteralPath $file.FullName).Hash -ne (Get-FileHash -LiteralPath $target).Hash) {
                 throw "Deployment verification failed: $relative"

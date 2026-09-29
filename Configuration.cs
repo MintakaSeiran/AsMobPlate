@@ -42,6 +42,7 @@ public sealed class Configuration : IPluginConfiguration
     public bool EnableTts = true;
     public bool EnableChatNotification = false;
     public bool EnableMapFlagOnDetection = true;
+    public bool EnablePartyFinderOnRightClick = true;
     public int SoundEffectId = 15;
     public int SoundRepeatCount = 4;
 
