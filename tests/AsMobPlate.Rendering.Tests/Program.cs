@@ -48,6 +48,73 @@ unsafe
             return;
         }
 
+        if (args.Length == 2 && args[0] == "--export-ss-trigger")
+        {
+            var painter = new NameplatePainter(new Configuration { Language = UiLanguage.EN });
+            var sample = new NameplateData(HuntRank.S, "Sample hunt", 1, 0, 23, null,
+                "Defeated 6s ago", false, 0, 10, IsDefeated: true, SsTriggered: true);
+            DocumentationImages.Render(args[1], 440, 160, () =>
+                painter.Draw(ImGui.GetForegroundDrawList(), new Vector2(220, 128), sample), pixels, width, height);
+            return;
+        }
+
+        foreach (var language in Enum.GetValues<UiLanguage>())
+        foreach (var enabled in new[] { true, false })
+        foreach (var scale in new[] { 0.5f, 1f, 2.5f })
+        {
+            var config = new Configuration { Language = language, ShowSsTriggerFrame = enabled, Scale = scale };
+            var painter = new NameplatePainter(config);
+            var sample = new NameplateData(HuntRank.S, "Sample hunt", 1, 0, 23, null,
+                "Defeated 6s ago", false, 5, 10, IsDefeated: true, SsTriggered: true);
+            var alphas = new HashSet<uint>();
+            var pairsDiffered = false;
+            Vector2? measured = null;
+            for (var frame = 0; frame < 5; frame++)
+            {
+                io.DeltaTime = 0.25f;
+                ImGui.NewFrame();
+                var list = ImGui.GetForegroundDrawList();
+                var size = painter.Draw(list, new Vector2(900, 600), sample);
+                if (size != painter.Measure(sample) || (measured != null && measured != size))
+                    throw new Exception("SS frame animation changed plate dimensions.");
+                measured = size;
+                var frameRgb = ImGui.ColorConvertFloat4ToU32(config.SsTriggerFrameColor) & 0x00ffffff;
+                var stripe = ImGui.ColorConvertFloat4ToU32(config.ArrivalWarningYellow);
+                var background = ImGui.ColorConvertFloat4ToU32(new Vector4(0.01f, 0.01f, 0.01f, 0.94f));
+                var foundBackground = false;
+                var foundStripe = false;
+                var foundFrame = false;
+                var quadrantAlphas = new uint[4];
+                for (var v = 0; v < list.VtxBuffer.Size; v++)
+                {
+                    var color = list.VtxBuffer[v].Col;
+                    foundStripe |= color == stripe;
+                    foundBackground |= color == background;
+                    if ((color & 0x00ffffff) == frameRgb && (color >> 24) > 0)
+                    {
+                        foundFrame = true;
+                        alphas.Add(color >> 24);
+                        var pos = list.VtxBuffer[v].Pos;
+                        var quadrant = (pos.X > 900 ? 1 : 0) + (pos.Y > 600 - size.Y / 2 ? 2 : 0);
+                        quadrantAlphas[quadrant] = Math.Max(quadrantAlphas[quadrant], color >> 24);
+                    }
+                }
+                if (enabled ? (!foundFrame || !foundBackground || foundStripe) : (foundFrame || !foundStripe))
+                    throw new Exception("SS frame priority or disabled fallback was incorrect.");
+                if (enabled)
+                {
+                    if (quadrantAlphas[0] != quadrantAlphas[3] || quadrantAlphas[1] != quadrantAlphas[2])
+                        throw new Exception("Diagonal corner pairs have different brightness.");
+                    pairsDiffered |= quadrantAlphas[0] != quadrantAlphas[1];
+                }
+                ImGui.Render();
+            }
+            if (enabled && (alphas.Count < 2 || !pairsDiffered))
+                throw new Exception("SS frame did not pulse.");
+        }
+        io.DeltaTime = 1f / 60;
+        Console.WriteLine("24 SS highlight rendering cases passed: pulsing frame, steady background, stable bounds, disabled fallback.");
+
         var cases = 0;
         foreach (var language in Enum.GetValues<UiLanguage>())
         foreach (var scale in new[] { 0.5f, 1f, 2.5f })

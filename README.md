@@ -16,17 +16,25 @@ Developer testers can keep using the dev-plugin installation below. Avoid enabli
 
 ## Download
 
-**[Download the compiled plugin ZIP (1.0.24.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.24.0/AsMobPlate-1.0.24.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.24.0)
+**[Download the compiled plugin ZIP (1.0.25.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.25.0/AsMobPlate-1.0.25.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.25.0)
 
 **Stable release: approved for publication by the maintainer.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
 
-For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.024` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
+For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.025` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.024` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.025` | **Development build:** `1.0.025` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+
+### SS Trigger Highlight (1.0.025)
+
+Only when a confirmed SS scouting system message is received, the most recently defeated S-rank plate still within its display lifetime gains four cyan corner brackets and a fixed **Defeated / SS roll pending** label (JP: the localized equivalent). Without the minion trigger, the label remains **Defeated**. The label describes the triggered SS follow-up, not a directly observed server-side roll. The top-left/bottom-right pair and the top-right/bottom-left pair brighten alternately. The background becomes steady near-black, and the brackets replace the warning stripes. Default appearance is cyan `#00E5FF`, 4 px thick, with a one-second full cycle that retains 35% of the configured opacity at its dimmest. A black outline keeps the brackets visible against bright scenery. Each arm spans 28% of its plate edge, leaving the middle of each edge open.
+
+Appearance settings include a frame enable switch, color, thickness (1-10 px), and pulse period (0.5-3 seconds). Turning the frame off preserves the triggered status label. Preview includes **SS minions spawned** with sample S-rank data; it does not play sounds or change live tracking. All labels support EN/JP/DE/FR.
+
+The highlight lasts only for the existing defeated-plate lifetime (30 seconds by default, measured from observed death). SS stage changes and duplicate announcements do not restart that lifetime or remove the highlight. A system message arriving before the death sample waits up to three seconds for a matching observation. Normal chat reports, disappearance, and minion sightings alone do not mark an S-rank plate. Without a matching defeated S observation, the existing progress panel and five-sound notification remain available. Territory/world/instance changes and logout clear the association; normal visibility and distance settings still apply.
 
 ### Party Finder Helper (1.0.024)
 

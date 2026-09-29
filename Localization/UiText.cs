@@ -19,6 +19,12 @@ public static class UiText
     {
         ["Minion"] = ["Minion", "配下", "Diener", "Serviteur"],
         ["Defeated"] = ["Defeated", "討伐済み", "Besiegt", "Vaincu"],
+        ["Defeated SS trigger"] = ["Defeated / SS roll pending", "討伐済み / SSモブ抽選中", "Besiegt / SS-Auslosung ausstehend", "Vaincu / Tirage SS en attente"],
+        ["Preview SS trigger"] = ["SS minions spawned", "SS眷属出現", "SS-Diener erschienen", "Serviteurs SS apparus"],
+        ["Show SS trigger frame"] = ["Pulse defeated S frame on SS trigger", "SS眷属出現時に討伐済みSの枠を点滅", "S-Rahmen bei SS-Auslösung pulsieren lassen", "Faire pulser le cadre S à l'apparition des serviteurs SS"],
+        ["SS trigger frame color"] = ["SS trigger frame color", "SS眷属出現フレームの色", "SS-Auslöser: Rahmenfarbe", "Couleur du cadre des serviteurs SS"],
+        ["SS trigger frame thickness"] = ["SS trigger frame thickness", "SS眷属出現フレームの太さ", "SS-Auslöser: Rahmenstärke", "Épaisseur du cadre des serviteurs SS"],
+        ["SS trigger pulse period"] = ["SS trigger pulse period", "SS眷属出現フレームの点滅周期", "SS-Auslöser: Pulsdauer", "Période de pulsation des serviteurs SS"],
         ["Defeated elapsed"] = ["Defeated {0}s ago", "討伐から{0}秒", "Vor {0}s besiegt", "Vaincu il y a {0}s"],
         ["Show SS minions"] = ["Show SS minions", "SS配下を表示", "SS-Diener anzeigen", "Afficher les serviteurs SS"],
         ["Show SS boss"] = ["Show SS boss", "SS本体を表示", "SS-Boss anzeigen", "Afficher le boss SS"],

@@ -156,6 +156,54 @@ internal static class HuntProgressTests
             p.Clear();
             Check(p.Stage == HuntStage.None && p.StartedAt == null && p.Find(1) == null);
         });
+        run("SS trigger highlights only the latest defeated S and never extends its lifetime", () =>
+        {
+            var p = new HuntProgress();
+            Observe(p, 1, HuntRank.S, true, 10);
+            Observe(p, 2, HuntRank.S, true, 15);
+            Observe(p, 3, HuntRank.A, true, 16);
+            Observe(p, 4, HuntRank.SS, true, 16);
+            Check(p.Start(17));
+            Check(!p.Find(1)!.SsTriggered && p.Find(2)!.SsTriggered && !p.Find(3)!.SsTriggered && !p.Find(4)!.SsTriggered);
+            Check(!p.Start(18));
+            p.Return(19);
+            Observe(p, 5, HuntRank.SS, false, 20);
+            Observe(p, 5, HuntRank.SS, true, 21);
+            Check(p.Find(2)!.SsTriggered && p.Find(2)!.DiedAt == 15);
+            p.Prune(46, 30);
+            Check(p.Find(2) == null);
+        });
+        run("SS trigger waits three seconds for a death sample and clears with context", () =>
+        {
+            var p = new HuntProgress();
+            p.Start(10);
+            Observe(p, 1, HuntRank.S, true, 13);
+            p.ResolveSsTrigger(13, 30);
+            Check(p.Find(1)!.SsTriggered);
+            p.Clear();
+            Observe(p, 2, HuntRank.S, true, 14);
+            p.ResolveSsTrigger(14, 30);
+            Check(!p.Find(2)!.SsTriggered);
+            p.Clear();
+            p.Start(20);
+            Observe(p, 3, HuntRank.S, true, 23.01);
+            p.ResolveSsTrigger(23.01, 30);
+            Check(!p.Find(3)!.SsTriggered);
+        });
+        run("Expired deaths and minion sightings cannot produce an S highlight", () =>
+        {
+            var p = new HuntProgress();
+            Observe(p, 1, HuntRank.S, true, 10);
+            Observe(p, 2, HuntRank.Minion, false, 11);
+            p.ResolveSsTrigger(11, 30);
+            Check(!p.Find(1)!.SsTriggered);
+            p.Start(40);
+            Check(!p.Find(1)!.SsTriggered);
+            p.Clear();
+            Observe(p, 3, HuntRank.S, true, 50);
+            p.Start(52, 1);
+            Check(!p.Find(3)!.SsTriggered);
+        });
         run("Ineligible territory cannot start an SS event", () =>
         {
             var p = new HuntProgress();

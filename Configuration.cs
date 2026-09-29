@@ -22,6 +22,10 @@ public sealed class Configuration : IPluginConfiguration
     public bool ShowHuntProgress = true;
     public bool ShowDefeated = true;
     public float DefeatedDisplaySeconds = 30;
+    public bool ShowSsTriggerFrame = true;
+    public Vector4 SsTriggerFrameColor = new(0, 229f / 255f, 1, 1);
+    public float SsTriggerFrameThickness = 4;
+    public float SsTriggerPulseSeconds = 1;
     public Vector2 HuntProgressPosition = new(24, 180);
     public bool ShowHpBar = true;
     public bool ShowHpPercent = true;

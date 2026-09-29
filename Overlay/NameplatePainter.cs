@@ -36,6 +36,8 @@ public sealed class NameplatePainter
         nameSize *= nameFontSize / ImGui.GetFontSize();
 
         var hpRatio = Math.Clamp(data.HpRatio, 0.0f, 1.0f);
+        var ssTriggered = data.IsDefeated && data.Rank == HuntRank.S && data.SsTriggered;
+        var ssTrigger = ssTriggered && this.configuration.ShowSsTriggerFrame;
         var hpText = $"{hpRatio * 100.0f:0}%";
         var hpTextSize = ImGui.CalcTextSize(hpText);
         var infoText = data.IsDefeated
@@ -51,7 +53,8 @@ public sealed class NameplatePainter
         var startText = data.StartText;
         var isInProgress = data.IsInProgress;
         var startRemainingSeconds = data.RemainingSeconds;
-        var inProgressText = data.IsDefeated ? UiText.Get("Defeated", this.configuration.Language)
+        var inProgressText = ssTriggered ? UiText.Get("Defeated SS trigger", this.configuration.Language)
+            : data.IsDefeated ? UiText.Get("Defeated", this.configuration.Language)
             : isInProgress && this.configuration.ShowInProgressLabel ? UiText.Get("In progress", this.configuration.Language) : string.Empty;
         if (!data.IsDefeated && inProgressText.Length > 0 && data.CombatElapsedSeconds is double elapsed)
         {
@@ -81,7 +84,12 @@ public sealed class NameplatePainter
         var bottomRight = topLeft + boxSize;
 
         var backgroundColor = isInProgress ? this.configuration.InProgressBackgroundColor : this.configuration.BackgroundColor;
-        if (tooLate || data.IsDefeated)
+        if (ssTrigger)
+        {
+            drawList.AddRectFilled(topLeft, bottomRight, ToU32(new Vector4(0.01f, 0.01f, 0.01f, 0.94f)), 4 * scale);
+            this.DrawSsTriggerFrame(drawList, topLeft, bottomRight, scale);
+        }
+        else if (tooLate || data.IsDefeated)
         {
             // A slow, continuous pulse keeps the text readable without abrupt flashes.
             var pulse = (float)(0.5 - 0.5 * Math.Cos(ImGui.GetTime() * Math.PI));
@@ -92,12 +100,13 @@ public sealed class NameplatePainter
         }
         else
             drawList.AddRectFilled(topLeft, bottomRight, ToU32(backgroundColor), 4.0f * scale);
-        this.DrawCountdownFrame(drawList, topLeft, bottomRight, startText.Length > 0, isInProgress, startRemainingSeconds, scale, data.CountdownWindowSeconds);
+        if (!data.IsDefeated)
+            this.DrawCountdownFrame(drawList, topLeft, bottomRight, startText.Length > 0, isInProgress, startRemainingSeconds, scale, data.CountdownWindowSeconds);
 
         var currentY = topLeft.Y + paddingY;
         if (inProgressText.Length > 0)
         {
-            drawList.AddText(new Vector2(topLeft.X + paddingX, currentY), ToU32(new Vector4(1.0f, 0.48f, 0.48f, 1.0f)), inProgressText);
+            drawList.AddText(new Vector2(topLeft.X + paddingX, currentY), ToU32(ssTrigger ? Vector4.One : new Vector4(1.0f, 0.48f, 0.48f, 1.0f)), inProgressText);
             currentY += inProgressSize.Y + gapY;
         }
 
@@ -134,6 +143,50 @@ public sealed class NameplatePainter
         var startY = this.DrawInfoText(drawList, topLeft, boxSize, barBottomRight.Y + gapY, infoText, infoSize);
         this.DrawInfoText(drawList, topLeft, boxSize, startY, startText, startSize);
         return boxSize;
+    }
+
+    private void DrawSsTriggerFrame(ImDrawListPtr list, Vector2 min, Vector2 max, float scale)
+    {
+        var width = (float.IsFinite(this.configuration.SsTriggerFrameThickness)
+            ? Math.Clamp(this.configuration.SsTriggerFrameThickness, 1, 10) : 4) * scale;
+        var period = float.IsFinite(this.configuration.SsTriggerPulseSeconds)
+            ? Math.Clamp(this.configuration.SsTriggerPulseSeconds, 0.5f, 3) : 1;
+        var color = this.configuration.SsTriggerFrameColor;
+        if (!float.IsFinite(color.X) || !float.IsFinite(color.Y) || !float.IsFinite(color.Z) || !float.IsFinite(color.W))
+            color = new Vector4(0, 229f / 255f, 1, 1);
+        color = Vector4.Clamp(color, Vector4.Zero, Vector4.One);
+        var wave = (float)(0.5 + 0.5 * Math.Cos(ImGui.GetTime() * Math.Tau / period));
+        var alternate = color;
+        color.W *= 0.35f + 0.65f * wave;
+        alternate.W *= 0.35f + 0.65f * (1 - wave);
+        // Diagonal pairs alternate; black-edged corner brackets stay outside the content.
+        var inset = new Vector2(width * 0.5f + scale);
+        min -= inset;
+        max += inset;
+        var arms = (max - min) * 0.28f;
+        DrawCorner(min, 1, 1, color);
+        DrawCorner(max, -1, -1, color);
+        DrawCorner(new Vector2(max.X, min.Y), -1, 1, alternate);
+        DrawCorner(new Vector2(min.X, max.Y), 1, -1, alternate);
+
+        void DrawCorner(Vector2 corner, float horizontal, float vertical, Vector4 tint)
+        {
+            var radius = MathF.Min(4 * scale, MathF.Min(arms.X, arms.Y));
+            var center = corner + new Vector2(horizontal * radius, vertical * radius);
+            var startAngle = vertical > 0 ? -MathF.PI / 2 : MathF.PI / 2;
+            var endAngle = horizontal > 0 ? (vertical > 0 ? -MathF.PI : MathF.PI) : 0;
+            Stroke(ToU32(new Vector4(0, 0, 0, 1)), width + 2 * scale);
+            Stroke(ToU32(tint), width);
+
+            void Stroke(uint strokeColor, float thickness)
+            {
+                list.PathLineTo(corner + new Vector2(horizontal * arms.X, 0));
+                list.PathLineTo(corner + new Vector2(horizontal * radius, 0));
+                list.PathArcTo(center, radius, startAngle, endAngle, 6);
+                list.PathLineTo(corner + new Vector2(0, vertical * arms.Y));
+                list.PathStroke(strokeColor, ImDrawFlags.None, thickness);
+            }
+        }
     }
 
     private void DrawWarningFrame(ImDrawListPtr list, Vector2 min, Vector2 max, float scale)
@@ -276,4 +329,5 @@ public readonly record struct NameplateData(
     double? ArrivalSeconds = null,
     bool IsDefeated = false,
     bool ArrivalWarning = false,
-    double? CombatElapsedSeconds = null);
+    double? CombatElapsedSeconds = null,
+    bool SsTriggered = false);

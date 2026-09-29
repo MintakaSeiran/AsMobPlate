@@ -21,12 +21,14 @@ public sealed class HuntProgress
         public double LastSeen;
         public double? DiedAt;
         public bool ArrivalWarning;
+        public bool SsTriggered;
         public HuntCombatClock Combat { get; } = new();
     }
 
     private readonly Dictionary<ulong, Observation> observations = new();
     private readonly List<ulong> expired = new();
     private readonly HashSet<ulong> defeatedMinions = new();
+    private double? pendingSsTrigger;
     public Dictionary<ulong, Observation>.ValueCollection Observations => this.observations.Values;
     public HuntStage Stage { get; private set; }
     public double? StartedAt { get; private set; }
@@ -41,9 +43,10 @@ public sealed class HuntProgress
         this.Stage = HuntStage.None;
         this.StartedAt = null;
         this.LastActivity = 0;
+        this.pendingSsTrigger = null;
     }
 
-    public bool Start(double now)
+    public bool Start(double now, double deadDuration = 30)
     {
         // Duplicate delivery must not reset the deadline or observed kills.
         if (this.StartedAt is double start && now - start < 5)
@@ -51,7 +54,34 @@ public sealed class HuntProgress
         this.defeatedMinions.Clear();
         this.StartedAt = now;
         this.SetStage(HuntStage.Searching, now);
+        this.pendingSsTrigger = now;
+        this.ResolveSsTrigger(now, deadDuration);
         return true;
+    }
+
+    public void ResolveSsTrigger(double now, double deadDuration)
+    {
+        if (this.pendingSsTrigger is not double received)
+            return;
+        if (now - received > 3)
+        {
+            this.pendingSsTrigger = null;
+            return;
+        }
+        Observation? candidate = null;
+        foreach (var item in this.observations.Values)
+        {
+            if (item.Rank != HuntRank.S || item.DiedAt is not double died
+                || now - died >= deadDuration || died > now)
+                continue;
+            if (candidate == null || died > candidate.DiedAt)
+                candidate = item;
+        }
+        if (candidate == null)
+            return;
+        // Latch onto the defeated S, independently of later SS event stages. Never restart its expiry.
+        candidate.SsTriggered = true;
+        this.pendingSsTrigger = null;
     }
 
     public void Return(double now)

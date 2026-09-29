@@ -174,6 +174,11 @@ public sealed class ConfigWindow
         changed |= this.ColorEdit("Warning red", ref this.configuration.ArrivalWarningRed);
         changed |= this.ColorEdit("Warning yellow", ref this.configuration.ArrivalWarningYellow);
         changed |= this.ColorEdit("Countdown frame color", ref this.configuration.CountdownFrameColor);
+        ImGui.Separator();
+        changed |= this.Checkbox("Show SS trigger frame", ref this.configuration.ShowSsTriggerFrame);
+        changed |= this.ColorEdit("SS trigger frame color", ref this.configuration.SsTriggerFrameColor);
+        changed |= this.SliderFloat("SS trigger frame thickness", ref this.configuration.SsTriggerFrameThickness, 1, 10, "%.1f px");
+        changed |= this.SliderFloat("SS trigger pulse period", ref this.configuration.SsTriggerPulseSeconds, 0.5f, 3, this.Text("Interval unit"));
         return changed;
     }
 

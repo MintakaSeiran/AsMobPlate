@@ -134,6 +134,7 @@ public sealed class HuntProgressTracker : IDisposable
                     this.Progress.Find(id)?.Combat.Update(npc.CurrentHp, npc.MaxHp,
                         (npc.StatusFlags & StatusFlags.InCombat) != 0, now);
             }
+            this.Progress.ResolveSsTrigger(now, this.DeadDuration);
             this.Progress.Prune(now, this.DeadDuration);
             if (before != this.Progress.Stage)
                 this.log.Add($"SS stage: {before} -> {this.Progress.Stage}; observed kills={this.Progress.ObservedKills}");
@@ -166,7 +167,7 @@ public sealed class HuntProgressTracker : IDisposable
         {
             if (this.disposed || territory != this.client.TerritoryType || !this.RefreshContext()
                 || receivedGeneration != this.generation || !HuntMarkRegistry.IsSsTerritory(this.context.Territory)) return;
-            if (start && this.Progress.Start(Now))
+            if (start && this.Progress.Start(Now, this.DeadDuration))
             {
                 this.clearStartTime();
                 this.notifySsTrigger();
@@ -197,7 +198,8 @@ public sealed class HuntProgressTracker : IDisposable
                 if (!gameGui.WorldToScreen(anchor, out var screen)) continue;
                 painter.Draw(ImGui.GetForegroundDrawList(), screen, new NameplateData(item.Rank, item.Name,
                     item.ObjectIndex, 0, distance, null,
-                    UiText.Format("Defeated elapsed", this.config.Language, (int)(now - died)), false, 0, 10, null, true));
+                    UiText.Format("Defeated elapsed", this.config.Language, (int)(now - died)), false, 0, 10, null, true,
+                    SsTriggered: item.SsTriggered));
             }
         var stage = this.Progress.Stage;
         if (!this.config.ShowHuntProgress || stage == HuntStage.None

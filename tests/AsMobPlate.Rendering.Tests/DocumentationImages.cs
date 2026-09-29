@@ -74,7 +74,7 @@ internal static unsafe class DocumentationImages
         }, atlas, atlasWidth, atlasHeight);
     }
 
-    private static void Render(string path, int width, int height, Action draw, byte* atlas, int atlasWidth, int atlasHeight)
+    internal static void Render(string path, int width, int height, Action draw, byte* atlas, int atlasWidth, int atlasHeight)
     {
         var io = ImGui.GetIO();
         io.DisplaySize = new Vector2(width, height);
