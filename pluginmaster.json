@@ -3,7 +3,7 @@
     "Author": "MintakaSeiran",
     "Name": "AS Mob Plate",
     "InternalName": "AsMobPlate",
-    "AssemblyVersion": "1.0.25.0",
+    "AssemblyVersion": "1.0.26.0",
     "Description": "Compact NameId-based A/S and SS hunt nameplates, SS minion tracking, detection alerts and announced ET countdowns.",
     "Punchline": "Compact nameplates for A/S rank hunt marks.",
     "ApplicableVersion": "any",
@@ -17,9 +17,9 @@
     "RepoUrl": "https://github.com/MintakaSeiran/AsMobPlate",
     "IconUrl": "https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/images/icon.png",
     "ImageUrls": ["https://raw.githubusercontent.com/MintakaSeiran/AsMobPlate/main/images/image1.png"],
-    "LastUpdate": 1790714414,
-    "DownloadLinkInstall": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.25.0/AsMobPlate-1.0.25.0.zip",
-    "DownloadLinkUpdate": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.25.0/AsMobPlate-1.0.25.0.zip",
-    "DownloadLinkTesting": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.25.0/AsMobPlate-1.0.25.0.zip"
+    "LastUpdate": 1790747925,
+    "DownloadLinkInstall": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.26.0/AsMobPlate-1.0.26.0.zip",
+    "DownloadLinkUpdate": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.26.0/AsMobPlate-1.0.26.0.zip",
+    "DownloadLinkTesting": "https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.26.0/AsMobPlate-1.0.26.0.zip"
   }
 ]
