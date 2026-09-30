@@ -185,7 +185,8 @@ public sealed class HuntNameplateRenderer : IDisposable
             {
                 this.announcedStartTimeTracker.TryGetRecruitmentStartEt(out var startEt);
                 var coordinates = Dalamud.Utility.MapUtil.GetMapCoordinates(npc);
-                this.partyFinderRecruitment.Open(rank, npc.Name.ToString(), new Vector2(coordinates.X, coordinates.Y), this.GetAreaName(), startEt);
+                this.partyFinderRecruitment.Open(rank, npc.Name.ToString(), new Vector2(coordinates.X, coordinates.Y),
+                    this.GetAreaName(), startEt, this.GetNearestAetheryte(npc.Position));
             }
         }
         ImGui.End();
@@ -197,7 +198,7 @@ public sealed class HuntNameplateRenderer : IDisposable
     {
         try
         {
-            var sheet = this.dataManager.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>();
+            var sheet = this.dataManager.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>(NearestAetheryte.Language(this.configuration.Language));
             var territory = sheet.GetRow(this.clientState.TerritoryType);
             var name = territory.PlaceName.Value.Name.ExtractText();
             return string.IsNullOrWhiteSpace(name) ? $"Territory {this.clientState.TerritoryType}" : name;
@@ -205,6 +206,28 @@ public sealed class HuntNameplateRenderer : IDisposable
         catch
         {
             return $"Territory {this.clientState.TerritoryType}";
+        }
+    }
+
+    private string? GetNearestAetheryte(Vector3 huntPosition)
+    {
+        try
+        {
+            var territory = this.clientState.TerritoryType;
+            var aetherytes = this.dataManager.GetExcelSheet<Lumina.Excel.Sheets.Aetheryte>(NearestAetheryte.Language(this.configuration.Language));
+            var markers = this.dataManager.GetSubrowExcelSheet<Lumina.Excel.Sheets.MapMarker>();
+            var nearest = NearestAetheryte.Find(NearestAetheryte.Read(aetherytes, markers, territory),
+                territory, new Vector2(huntPosition.X, huntPosition.Z));
+            this.DebugLog.Add(nearest is { } destination
+                ? $"PF nearest aetheryte: territory={territory}; id={destination.Id}; name={destination.Name}"
+                : $"PF nearest aetheryte: territory={territory}; none; using map coordinates");
+            return nearest?.Name;
+        }
+        catch (Exception ex)
+        {
+            this.pluginLog.Warning(ex, "Could not resolve nearest aetheryte; using hunt coordinates.");
+            this.DebugLog.Add("PF nearest aetheryte lookup failed; using map coordinates");
+            return null;
         }
     }
 }

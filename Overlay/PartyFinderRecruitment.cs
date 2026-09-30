@@ -45,11 +45,11 @@ public sealed class PartyFinderRecruitment : IDisposable
         this.framework.Update += this.Update;
     }
 
-    public void Open(HuntRank rank, string name, Vector2 mapPosition, string area, string? startEt)
+    public void Open(HuntRank rank, string name, Vector2 mapPosition, string area, string? startEt, string? nearestAetheryte = null)
     {
         if (rank == HuntRank.Minion || this.pendingComment != null)
             return;
-        this.pendingComment = RecruitmentComment.Build(this.configuration.Language, rank, name, area, mapPosition, startEt);
+        this.pendingComment = RecruitmentComment.Build(this.configuration.Language, rank, name, area, mapPosition, startEt, nearestAetheryte);
         this.territory = this.clientState.TerritoryType;
         this.deadline = Environment.TickCount64 + 10000;
         this.nextStep = 0;

@@ -29,6 +29,7 @@
     <Compile Include="../../Overlay/DebugLog.cs" Link="DebugLog.cs" />
     <Compile Include="../../Overlay/PartyFinderRecruitment.cs" Link="PartyFinderRecruitment.cs" />
     <Compile Include="../../Overlay/RecruitmentComment.cs" Link="RecruitmentComment.cs" />
+    <Compile Include="../../Overlay/NearestAetheryte.cs" Link="NearestAetheryte.cs" />
     <Compile Include="../../Windows/NameplatePreview.cs" Link="NameplatePreview.cs" />
     <Compile Include="../../Windows/PreviewAnimation.cs" Link="PreviewAnimation.cs" />
     <Compile Include="../../Windows/ConfigWindow.cs" Link="ConfigWindow.cs" />

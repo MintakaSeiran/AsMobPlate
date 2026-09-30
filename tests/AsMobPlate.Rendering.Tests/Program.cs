@@ -8,6 +8,12 @@ using Dalamud.Bindings.ImGui;
 
 unsafe
 {
+    AetheryteTests.Run();
+    if (args.Length == 2 && args[0] == "--validate-aetherytes")
+    {
+        AetheryteTests.ValidateGameData(args[1]);
+        return;
+    }
     RecruitmentTests.Run();
     var estimator = new ArrivalEstimator();
     var target = new Vector3(850, 0, 0);

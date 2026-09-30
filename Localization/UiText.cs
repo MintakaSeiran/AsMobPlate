@@ -131,6 +131,7 @@ public static class UiText
         ["Recruitment preview"] = ["Recruitment preview", "募集内容の確認", "Vorschau der Gruppensuche", "Aperçu de l'annonce"],
         ["Apply recruitment"] = ["Open recruitment settings", "ゲームの募集設定を開く", "Rekrutierungseinstellungen öffnen", "Ouvrir les paramètres de recrutement"],
         ["Recruitment start"] = ["Start", "開始", "Start", "Début"],
+        ["Recruitment nearest"] = ["Nearest", "最寄り", "Nächster Ätheryt", "Éthérite la plus proche"],
         ["Recruitment already open"] = ["Close the current recruitment editor, then right-click the hunt plate again.", "開いている募集編集画面を閉じてから、プレートをもう一度右クリックしてください。", "Schließe den offenen Rekrutierungseditor und klicke erneut mit rechts auf die Jagdplatte.", "Fermez l'éditeur de recrutement, puis faites à nouveau un clic droit sur la plaque."],
         ["Recruitment already active"] = ["You already have an active recruitment listing.", "すでにパーティ募集中です。", "Du hast bereits eine aktive Gruppensuche.", "Une annonce de recrutement est déjà active."],
         ["Recruitment failed"] = ["Could not open recruitment settings. Please try again.", "募集設定を開けませんでした。もう一度お試しください。", "Rekrutierungseinstellungen konnten nicht geöffnet werden. Bitte erneut versuchen.", "Impossible d'ouvrir les paramètres de recrutement. Veuillez réessayer."],
