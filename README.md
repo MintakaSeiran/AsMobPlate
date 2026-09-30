@@ -16,25 +16,25 @@ Developer testers can keep using the dev-plugin installation below. Avoid enabli
 
 ## Download
 
-**[Download the compiled plugin ZIP (1.0.25.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.25.0/AsMobPlate-1.0.25.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.25.0)
+**[Download the compiled plugin ZIP (1.0.26.0)](https://github.com/MintakaSeiran/AsMobPlate/releases/download/v1.0.26.0/AsMobPlate-1.0.26.0.zip)** | [Release notes and SHA256 checksum](https://github.com/MintakaSeiran/AsMobPlate/releases/tag/v1.0.26.0)
 
 **Stable release: approved for publication by the maintainer.** Download the plugin ZIP above, not GitHub's automatically generated source-code archives. The ZIP includes the DLL, generated manifest, dependencies and images.
 
-For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.025` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
+For developer installation, disable the currently loaded AS Mob Plate plugin, extract the entire ZIP into `%APPDATA%\XIVLauncher\devPlugins\AsMobPlate`, then select `AsMobPlate.dll` in Dalamud's developer plugin locations if it is not already registered. Reload the plugin and verify `1.0.026` in its settings title. Replacing files alone does not reload an already running plugin. This download is a manual dev-plugin installation, not an automatic updater repository.
 
 [![AS Mob Plate settings and live nameplate preview in English](docs/images/settings-en.png)](docs/images/settings-en.png)
 
 *English settings and live preview in version 1.0.016. User-provided UI capture; the displayed settings are customized examples, not defaults. The nameplate uses sample data.*
 
-**Current release:** `1.0.025` | **Development build:** `1.0.026` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
+**Current release:** `1.0.026` | **Development build:** `1.0.026` | **Author:** [MintakaSeiran](https://github.com/MintakaSeiran)
 
-### Nearest Aetheryte in Recruitment (1.0.026 Development)
+### Nearest Aetheryte in Recruitment (1.0.026)
 
 Right-click recruitment comments replace hunt coordinates with the nearest same-territory teleport aetheryte, measured by horizontal straight-line distance from the hunt at click time. Names and area names follow the selected EN/JP/DE/FR UI language using game data. Example: `[S] Hunt / Area / Nearest: Aetheryte / Start ET 11:20`. Unannounced ET is omitted. When no valid destination or data is available, the comment falls back to the original map coordinates.
 
 Only named, visible teleport aetherytes with matching map markers are candidates; local aethernet shards are excluded. Map scaling and offsets are removed before comparing world X/Z positions. This is not route planning: terrain, elevation, unlock status and participant travel times are not considered. Areas without a teleport aetheryte use coordinates rather than guessing a neighboring area's destination. The destination and announced ET take priority over long hunt/area names within the native UTF-8 comment limit. No teleport is executed and no other plugin is controlled. Native recruitment settings and user-confirmed registration are unchanged. Lookup results and coordinate fallbacks are included in the debug log.
 
-Validation includes nearest-point selection, territory isolation, deterministic ties, map scale/offset conversion, missing-data fallback and four-language UTF-8 comment limits. An optional `--validate-aetherytes <sqpack-path>` run of the rendering-test project checks real game sheets; the local dataset resolved 107 destinations across 62 territories in each of the four languages. In-game recruitment acceptance remains a manual test before publication.
+Validation includes nearest-point selection, territory isolation, deterministic ties, map scale/offset conversion, missing-data fallback and four-language UTF-8 comment limits. An optional `--validate-aetherytes <sqpack-path>` run of the rendering-test project checks real game sheets; the local dataset resolved 107 destinations across 62 territories in each of the four languages. The maintainer approved this release after testing the development build.
 
 ### SS Trigger Highlight (1.0.025)
 
@@ -50,7 +50,7 @@ Right-click anywhere inside a live A/S/SS hunt nameplate to open the game's **Pa
 
 Version 1.0.024 removes the context menu and plugin confirmation popup. Setup waits for the native finder and editor to initialize before filling the controls. It stops after filling the editor; subsequent manual edits are not overwritten. Existing recruitment drafts and active listings are preserved. Failures time out after ten seconds and produce a localized chat message; setup stages are included in the plugin's exportable debug log.
 
-In the stable 1.0.025 release, the public comment follows the selected AS Mob Plate UI language and contains the hunt rank/name, area and map coordinates, without role text. Development version 1.0.026 uses the nearest-aetheryte format described above. If an announced ET start is active in the current territory, it is appended. Long names are shortened within the native UTF-8 buffer limit while preserving the start ET. Review the prepared settings in the native editor before registering the recruitment.
+The public comment follows the selected AS Mob Plate UI language and contains the hunt rank/name and area, without role text. Version 1.0.026 uses the nearest-aetheryte format described above, with map coordinates as a fallback. If an announced ET start is active in the current territory, it is appended. Long names are shortened within the native UTF-8 buffer limit while preserving the destination and start ET. Review the prepared settings in the native editor before registering the recruitment.
 
 ### Combat Start and Elapsed Time (1.0.022)
 
